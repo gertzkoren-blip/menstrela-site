@@ -752,19 +752,34 @@
         moneyFormat: '%24%7B%7Bamount%7D%7D',
         options: {
   "product": {
+    "contents": {
+      "img": false,
+      "title": false,
+      "price": false,
+      "description": false,
+      "button": true,
+      "quantity": false
+    },
     "styles": {
       "product": {
         "@media (min-width: 601px)": {
-          "max-width": "calc(25% - 20px)",
-          "margin-left": "20px",
-          "margin-bottom": "50px"
+          "max-width": "100%",
+          "margin-left": "0px",
+          "margin-bottom": "0px"
         }
       },
       "button": {
+        "background-color": "#8b3a52",
+        "width": "100%",
+        "padding-top": "18px",
+        "padding-bottom": "18px",
+        "font-size": "15px",
+        "font-weight": "700",
+        "letter-spacing": "0.05em",
+        "border-radius": "0px",
         ":hover": {
           "background-color": "#7d344a"
         },
-        "background-color": "#8b3a52",
         ":focus": {
           "background-color": "#7d344a"
         }
@@ -777,10 +792,10 @@
   "cart": {
     "styles": {
       "button": {
+        "background-color": "#8b3a52",
         ":hover": {
           "background-color": "#7d344a"
         },
-        "background-color": "#8b3a52",
         ":focus": {
           "background-color": "#7d344a"
         }
