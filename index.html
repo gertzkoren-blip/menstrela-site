@@ -1,0 +1,1421 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Menstrela™ — Relief That Moves With You</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --rose: #8B3A52;
+      --cream: #F5EDE8;
+      --plum: #2C1A22;
+      --blush: #E8C4C4;
+      --blush-light: #F5E0E0;
+      --white: #FFFFFF;
+      --rose-hover: #7a3148;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body { font-family: 'DM Sans', sans-serif; background: var(--white); color: var(--plum); overflow-x: hidden; }
+
+    h1, h2, h3, h4 { font-family: 'Cormorant Garamond', serif; font-weight: 400; }
+
+    /* ─── GRAIN ─── */
+    .grain { position: relative; }
+    .grain::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+      background-repeat: repeat;
+      background-size: 180px 180px;
+      opacity: 0.55;
+      z-index: 1;
+    }
+    .grain > * { position: relative; z-index: 2; }
+
+    /* ─── ANNOUNCEMENT BAR ─── */
+    .announcement-bar {
+      background: var(--rose);
+      color: var(--cream);
+      height: 42px;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      position: sticky;
+      top: 0;
+      z-index: 1001;
+    }
+    .ann-track {
+      display: inline-flex;
+      align-items: center;
+      white-space: nowrap;
+      animation: annMarquee 26s linear infinite;
+    }
+    .ann-track:hover { animation-play-state: paused; }
+    @keyframes annMarquee { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
+    .ann-item {
+      display: inline-flex;
+      align-items: center;
+      gap: 14px;
+      font-size: 13px;
+      font-weight: 500;
+      letter-spacing: 0.04em;
+      padding: 0 48px;
+    }
+    .ann-dot { width: 4px; height: 4px; background: var(--blush); border-radius: 50%; flex-shrink: 0; opacity: 0.7; }
+
+    /* ─── HEADER ─── */
+    .header {
+      position: sticky; top: 42px; z-index: 1000;
+      background: var(--white);
+      border-bottom: 1px solid var(--blush-light);
+      padding: 0 40px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 70px;
+      transition: box-shadow 0.3s ease;
+    }
+    .header.scrolled { box-shadow: 0 2px 24px rgba(44,26,34,0.09); }
+    .logo { font-family: 'Cormorant Garamond', serif; font-size: 26px; font-weight: 500; color: var(--plum); text-decoration: none; letter-spacing: 0.02em; flex-shrink: 0; }
+    .logo sup { font-size: 11px; vertical-align: super; font-weight: 400; }
+    .nav { display: flex; align-items: center; gap: 32px; }
+    .nav-link { color: var(--plum); text-decoration: none; font-size: 13.5px; font-weight: 400; letter-spacing: 0.04em; transition: color 0.2s; opacity: 0.75; }
+    .nav-link:hover { color: var(--rose); opacity: 1; }
+
+    /* Cart icon */
+    .cart-btn {
+      position: relative;
+      background: none; border: none; cursor: pointer;
+      padding: 8px;
+      display: flex; align-items: center;
+      color: var(--plum);
+      transition: color 0.2s;
+      text-decoration: none;
+    }
+    .cart-btn:hover { color: var(--rose); }
+    .cart-btn svg { width: 24px; height: 24px; }
+    .cart-count {
+      position: absolute; top: 2px; right: 2px;
+      background: var(--rose); color: var(--white);
+      font-size: 10px; font-weight: 700;
+      width: 17px; height: 17px;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      opacity: 0; transform: scale(0);
+      transition: opacity 0.25s, transform 0.25s;
+    }
+    .cart-count.visible { opacity: 1; transform: scale(1); }
+    .cart-wrapper { position: relative; }
+
+    .btn {
+      display: inline-flex; align-items: center; justify-content: center;
+      background: var(--rose); color: #FFFFFF;
+      border: none; padding: 13px 28px;
+      font-family: 'DM Sans', sans-serif; font-size: 14px; font-weight: 600; letter-spacing: 0.05em;
+      cursor: pointer; text-decoration: none;
+      transition: background 0.2s, transform 0.15s;
+      border-radius: 0;
+    }
+    .btn:hover { background: var(--rose-hover); transform: translateY(-1px); }
+    .btn:active { transform: translateY(0); }
+
+    .nav-toggle { display: none; background: none; border: none; cursor: pointer; padding: 8px; flex-direction: column; gap: 5px; }
+    .nav-toggle span { display: block; width: 24px; height: 2px; background: var(--plum); transition: all 0.3s; }
+
+    /* ─── HERO ─── */
+    .hero {
+      position: relative; width: 100%; height: 100vh;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .hero-bg {
+      position: absolute; inset: 0;
+      background: url('hero-landscape4.png') center 20% / cover no-repeat;
+      z-index: 0;
+      transform: translateZ(0);
+      will-change: transform;
+      backface-visibility: hidden;
+    }
+    .hero-overlay {
+      position: absolute; inset: 0;
+      background: rgba(44,26,34,0.52);
+      z-index: 1;
+    }
+    .hero-content {
+      position: relative; z-index: 2;
+      padding: 0 40px;
+      max-width: 820px;
+      margin: 0 auto;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .hero-eyebrow { font-size: 11px; font-weight: 500; letter-spacing: 0.22em; text-transform: uppercase; color: var(--blush); margin-bottom: 22px; }
+    .hero h1 { font-size: clamp(44px, 5.5vw, 72px); line-height: 1.06; color: var(--white); margin-bottom: 24px; font-weight: 300; }
+    .hero h1 em { font-style: italic; font-weight: 400; color: var(--blush); }
+    .hero-sub { font-size: 16px; line-height: 1.8; color: var(--cream); opacity: 0.88; margin-bottom: 36px; max-width: 600px; text-align: center; }
+    .hero-cta-group { display: flex; flex-direction: column; align-items: center; gap: 14px; margin-bottom: 36px; }
+    .hero-cta-group .btn { padding: 17px 40px; font-size: 15px; }
+    .hero-link { font-size: 13.5px; color: var(--blush); text-decoration: none; font-weight: 500; letter-spacing: 0.05em; display: inline-flex; align-items: center; gap: 6px; transition: gap 0.2s; }
+    .hero-link:hover { gap: 11px; }
+    .trust-badges { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; }
+    .trust-badge { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 500; color: var(--cream); background: rgba(44,26,34,0.45); border: 1px solid rgba(245,224,224,0.3); padding: 7px 13px; letter-spacing: 0.03em; backdrop-filter: blur(4px); }
+    .trust-badge .check { color: var(--blush); }
+
+    /* Hero stagger */
+    .hero-content > * { opacity: 0; transform: translateY(22px); animation: heroIn 0.85s ease forwards; }
+    .hero-content > *:nth-child(1) { animation-delay: 0.1s; }
+    .hero-content > *:nth-child(2) { animation-delay: 0.25s; }
+    .hero-content > *:nth-child(3) { animation-delay: 0.4s; }
+    .hero-content > *:nth-child(4) { animation-delay: 0.55s; }
+    .hero-content > *:nth-child(5) { animation-delay: 0.7s; }
+    @keyframes heroIn { to { opacity: 1; transform: translateY(0); } }
+
+    /* ─── FEATURES STRIP ─── */
+    .features-strip { background: var(--plum); padding: 18px 0; overflow: hidden; white-space: nowrap; }
+    .strip-track { display: inline-flex; animation: marquee 30s linear infinite; }
+    .strip-track:hover { animation-play-state: paused; }
+    @keyframes marquee { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
+    .strip-item { display: inline-flex; align-items: center; gap: 12px; color: var(--cream); font-size: 12px; font-weight: 400; letter-spacing: 0.1em; text-transform: uppercase; padding: 0 36px; }
+    .strip-dot { width: 4px; height: 4px; background: var(--blush); border-radius: 50%; flex-shrink: 0; }
+
+    /* ─── PRODUCT SECTION ─── */
+    .product-section {
+      padding: 100px 60px; background: var(--white);
+      display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: start;
+      max-width: 1240px; margin: 0 auto;
+    }
+    .product-images { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .img-main { grid-column: 1 / -1; aspect-ratio: 4/3; overflow: hidden; background: radial-gradient(ellipse at 42% 38%, #F5EDE8, #E8C4C4 60%, #D4A0B0 100%); cursor: zoom-in; will-change: transform; }
+    .img-thumb { aspect-ratio: 1; overflow: hidden; background: radial-gradient(ellipse at 55% 35%, #F5EDE8, #E8C4C4); cursor: zoom-in; will-change: transform; }
+
+    /* Image quality */
+    .img-main img, .img-thumb img {
+      width: 100%; height: 100%;
+      object-fit: cover; display: block;
+      transition: transform 0.5s ease;
+      image-rendering: -webkit-optimize-contrast;
+      image-rendering: crisp-edges;
+      transform: translateZ(0);
+      backface-visibility: hidden;
+      -webkit-font-smoothing: antialiased;
+    }
+    .img-main:hover img, .img-thumb:hover img { transform: scale(1.03); }
+
+    .product-info { padding-top: 4px; }
+    .product-subtitle { font-size: 11px; font-weight: 500; letter-spacing: 0.16em; text-transform: uppercase; color: var(--rose); margin-bottom: 12px; }
+    .product-title { font-size: clamp(26px, 3vw, 38px); line-height: 1.15; color: var(--plum); margin-bottom: 16px; }
+    .stars-row { display: flex; align-items: center; gap: 10px; margin-bottom: 20px; }
+    .stars { color: #C8956A; font-size: 16px; letter-spacing: 2px; }
+    .review-count { font-size: 13px; color: var(--plum); opacity: 0.6; }
+    .price-row { display: flex; align-items: center; gap: 14px; margin-bottom: 24px; flex-wrap: wrap; }
+    .price-current { font-family: 'Cormorant Garamond', serif; font-size: 38px; font-weight: 500; color: var(--plum); }
+    .price-compare { font-size: 20px; text-decoration: line-through; color: var(--plum); opacity: 0.35; }
+    .save-badge { background: var(--blush-light); color: var(--rose); font-size: 12px; font-weight: 600; padding: 4px 10px; letter-spacing: 0.04em; }
+    .product-desc { font-size: 15px; line-height: 1.8; color: var(--plum); opacity: 0.72; margin-bottom: 26px; }
+    .feature-list { list-style: none; margin-bottom: 20px; display: flex; flex-direction: column; gap: 11px; }
+    .feature-list li { display: flex; align-items: flex-start; gap: 10px; font-size: 14px; line-height: 1.6; color: var(--plum); }
+    .feature-list .check { color: var(--rose); flex-shrink: 0; margin-top: 1px; }
+
+    /* Size guide button */
+    .size-guide-btn {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: none; border: 1.5px solid var(--blush);
+      color: var(--plum); font-family: 'DM Sans', sans-serif;
+      font-size: 13px; font-weight: 500; letter-spacing: 0.04em;
+      padding: 9px 18px; cursor: pointer; margin-bottom: 22px;
+      transition: border-color 0.2s, color 0.2s;
+    }
+    .size-guide-btn:hover { border-color: var(--rose); color: var(--rose); }
+    .size-guide-btn svg { width: 16px; height: 16px; }
+
+    /* Specs accordion */
+    .specs-accordion { margin-bottom: 24px; border: 1px solid var(--blush); }
+    .specs-toggle {
+      width: 100%; background: var(--cream);
+      border: none; padding: 14px 18px;
+      display: flex; align-items: center; justify-content: space-between;
+      cursor: pointer; font-family: 'DM Sans', sans-serif;
+      font-size: 13.5px; font-weight: 600; color: var(--plum);
+      letter-spacing: 0.04em; text-transform: uppercase;
+    }
+    .specs-toggle:hover { color: var(--rose); }
+    .specs-arrow { font-size: 14px; color: var(--rose); transition: transform 0.3s ease; }
+    .specs-accordion.open .specs-arrow { transform: rotate(180deg); }
+    .specs-body { max-height: 0; overflow: hidden; transition: max-height 0.4s cubic-bezier(0.4,0,0.2,1); }
+    .specs-accordion.open .specs-body { max-height: 600px; }
+    .specs-inner { padding: 18px; display: flex; flex-direction: column; gap: 10px; }
+    .spec-row { display: grid; grid-template-columns: 140px 1fr; gap: 10px; font-size: 13px; line-height: 1.6; }
+    .spec-label { font-weight: 600; color: var(--rose); letter-spacing: 0.02em; }
+    .spec-val { color: var(--plum); opacity: 0.8; }
+
+    .shipping-notice { background: var(--cream); border-left: 3px solid var(--rose); padding: 12px 16px; font-size: 13px; color: var(--plum); margin-bottom: 20px; line-height: 1.5; }
+    .upsell-box { border: 1.5px solid var(--blush); padding: 18px 20px; margin-bottom: 24px; background: var(--cream); transition: border-color 0.2s; cursor: pointer; }
+    .upsell-box:hover { border-color: var(--rose); }
+    .upsell-label { display: flex; align-items: center; gap: 12px; cursor: pointer; user-select: none; }
+    .upsell-label input[type="checkbox"] { width: 18px; height: 18px; accent-color: var(--rose); cursor: pointer; flex-shrink: 0; }
+    .upsell-label-text { display: flex; flex-direction: column; gap: 3px; flex: 1; }
+    .upsell-name { font-size: 14px; font-weight: 500; color: var(--plum); }
+    .upsell-meta { font-size: 12px; color: var(--plum); opacity: 0.55; }
+    .upsell-price { font-family: 'Cormorant Garamond', serif; font-size: 22px; font-weight: 500; color: var(--plum); }
+    .add-to-cart-btn { width: 100%; padding: 18px; font-size: 15px; font-weight: 600; letter-spacing: 0.06em; margin-bottom: 22px; transition: background 0.3s, transform 0.15s; }
+    .guarantee-row { display: flex; justify-content: space-around; gap: 12px; padding-top: 18px; border-top: 1px solid var(--blush-light); flex-wrap: wrap; }
+    .guarantee-item { display: flex; flex-direction: column; align-items: center; gap: 5px; font-size: 11.5px; font-weight: 500; color: var(--plum); opacity: 0.65; text-align: center; letter-spacing: 0.03em; }
+    .guarantee-item .g-icon { font-size: 22px; }
+
+    /* ─── COMPARISON ─── */
+    .comparison-section { background: var(--cream); padding: 100px 60px; text-align: center; position: relative; }
+    .section-eyebrow { font-size: 11px; font-weight: 500; letter-spacing: 0.2em; text-transform: uppercase; color: var(--rose); margin-bottom: 16px; }
+    .section-title { font-size: clamp(32px, 4vw, 52px); line-height: 1.15; color: var(--plum); margin-bottom: 16px; font-weight: 300; }
+    .section-sub { font-size: 16px; color: var(--plum); opacity: 0.68; max-width: 520px; margin: 0 auto 56px; line-height: 1.75; }
+    .comparison-table-wrap { max-width: 760px; margin: 0 auto 32px; overflow-x: auto; }
+    .comparison-table { width: 100%; border-collapse: collapse; font-size: 14.5px; }
+    .comparison-table thead tr { background: var(--plum); }
+    .comparison-table th { padding: 18px 24px; text-align: center; font-family: 'Cormorant Garamond', serif; font-size: 21px; font-weight: 400; color: var(--cream); letter-spacing: 0.02em; }
+    .comparison-table th:first-child { text-align: left; font-family: 'DM Sans', sans-serif; font-size: 12px; letter-spacing: 0.1em; text-transform: uppercase; }
+    .comparison-table th.highlight { color: var(--blush); }
+    .comparison-table td { padding: 16px 24px; border-bottom: 1px solid var(--blush-light); text-align: center; color: var(--plum); }
+    .comparison-table td:first-child { text-align: left; font-weight: 500; font-size: 14px; }
+    .comparison-table tr:nth-child(even) { background: rgba(245,237,232,0.5); }
+    .comparison-table tr:hover { background: rgba(232,196,196,0.2); transition: background 0.2s; }
+    .icon-yes { color: var(--rose); font-size: 18px; font-weight: 700; }
+    .icon-partial { color: #C8956A; font-size: 18px; font-weight: 700; }
+    .icon-no { color: var(--plum); opacity: 0.22; font-size: 18px; }
+    .comparison-note { max-width: 600px; margin: 0 auto; font-size: 14px; color: var(--plum); opacity: 0.68; line-height: 1.8; padding: 22px 28px; border: 1px solid var(--blush); background: var(--white); }
+
+    /* ─── HOW IT WORKS ─── */
+    .how-it-works { padding: 100px 60px; background: var(--white); }
+    .section-header { text-align: center; margin-bottom: 64px; }
+    .features-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 28px; max-width: 1100px; margin: 0 auto; }
+    .feature-card { padding: 36px 30px; background: var(--cream); transition: transform 0.3s ease, box-shadow 0.3s ease; position: relative; overflow: hidden; }
+    .feature-card::before { content: ''; position: absolute; top: 0; left: 0; width: 3px; height: 0; background: var(--rose); transition: height 0.35s ease; }
+    .feature-card:hover { transform: translateY(-5px); box-shadow: 0 16px 44px rgba(44,26,34,0.1); }
+    .feature-card:hover::before { height: 100%; }
+    .feature-number { font-family: 'Cormorant Garamond', serif; font-size: 52px; font-weight: 300; color: var(--rose); opacity: 0.28; line-height: 1; margin-bottom: 16px; }
+    .feature-card h3 { font-size: 20px; font-weight: 500; color: var(--plum); margin-bottom: 12px; }
+    .feature-card p { font-size: 14px; line-height: 1.8; color: var(--plum); opacity: 0.68; }
+
+    /* ─── STATS ─── */
+    .stats-section { background: var(--rose); padding: 80px 60px; }
+    .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0; max-width: 1000px; margin: 0 auto; text-align: center; }
+    .stat-item { padding: 0 20px; }
+    .stat-item + .stat-item { border-left: 1px solid rgba(245,224,224,0.25); }
+    .stat-number { font-family: 'Cormorant Garamond', serif; font-size: 64px; font-weight: 300; color: var(--white); line-height: 1; margin-bottom: 12px; }
+    .stat-label { font-size: 14px; color: var(--cream); opacity: 0.82; line-height: 1.55; }
+
+    /* ─── REVIEWS ─── */
+    .reviews-section { padding: 100px 60px; background: var(--cream); position: relative; }
+    .reviews-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 28px; max-width: 1100px; margin: 0 auto; }
+    .review-card { background: var(--white); padding: 36px 30px; transition: transform 0.3s ease, box-shadow 0.3s ease; }
+    .review-card:hover { transform: translateY(-5px); box-shadow: 0 18px 52px rgba(44,26,34,0.1); }
+    .review-stars { color: #C8956A; font-size: 15px; letter-spacing: 2px; margin-bottom: 16px; }
+    .review-quote-mark { font-family: 'Cormorant Garamond', serif; font-size: 80px; color: var(--blush); line-height: 0.5; margin-bottom: 14px; display: block; }
+    .review-text { font-size: 15px; line-height: 1.82; color: var(--plum); margin-bottom: 24px; font-style: italic; }
+    .review-author { display: flex; align-items: center; gap: 12px; }
+    .author-avatar { width: 40px; height: 40px; border-radius: 50%; background: var(--blush-light); display: flex; align-items: center; justify-content: center; font-family: 'Cormorant Garamond', serif; font-size: 18px; color: var(--plum); font-weight: 500; flex-shrink: 0; }
+    .author-info { display: flex; flex-direction: column; gap: 3px; }
+    .author-name { font-size: 13.5px; font-weight: 600; color: var(--plum); }
+    .author-meta { font-size: 11.5px; color: var(--plum); opacity: 0.5; display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+    .verified-badge { background: #e8f5e9; color: #388e3c; font-size: 10px; font-weight: 600; padding: 2px 7px; }
+
+    /* ─── FAQ ─── */
+    .faq-section { background: var(--white); padding: 100px 60px; }
+    .faq-list { max-width: 760px; margin: 0 auto; }
+    .faq-item { border-bottom: 1px solid var(--blush); }
+    .faq-item:first-child { border-top: 1px solid var(--blush); }
+    .faq-question { width: 100%; background: none; border: none; padding: 22px 0; display: flex; align-items: center; justify-content: space-between; cursor: pointer; text-align: left; font-family: 'Cormorant Garamond', serif; font-size: 21px; font-weight: 400; color: var(--plum); transition: color 0.2s; gap: 20px; }
+    .faq-question:hover { color: var(--rose); }
+    .faq-icon { font-size: 26px; color: var(--rose); flex-shrink: 0; transition: transform 0.35s cubic-bezier(0.4,0,0.2,1); line-height: 1; font-weight: 300; }
+    .faq-item.open .faq-icon { transform: rotate(45deg); }
+    .faq-answer { max-height: 0; overflow: hidden; transition: max-height 0.45s cubic-bezier(0.4,0,0.2,1); }
+    .faq-answer-inner { padding: 0 0 26px; font-size: 15px; line-height: 1.85; color: var(--plum); opacity: 0.72; max-width: 640px; }
+
+    /* ─── FINAL CTA ─── */
+    .final-cta { background: var(--plum); padding: 110px 60px; text-align: center; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+    .final-cta h2 { font-size: clamp(34px, 5vw, 58px); color: var(--white); margin-bottom: 20px; font-weight: 300; font-style: italic; line-height: 1.15; }
+    .final-cta p { font-size: 16px; color: var(--cream); opacity: 0.72; max-width: 480px; margin: 0 auto 42px; line-height: 1.75; }
+    .final-cta .btn { padding: 18px 50px; font-size: 15px; margin: 0 auto; display: block; width: fit-content; }
+    .final-cta-meta { margin-top: 22px; font-size: 12.5px; color: var(--cream); opacity: 0.45; letter-spacing: 0.07em; }
+
+    /* ─── FOOTER ─── */
+    .footer { background: var(--white); border-top: 1px solid var(--blush-light); padding: 64px 60px 40px; }
+    .footer-grid { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 48px; max-width: 1200px; margin: 0 auto 48px; }
+    .footer-brand .logo { display: block; margin-bottom: 16px; }
+    .footer-brand p { font-size: 13.5px; color: var(--plum); opacity: 0.58; line-height: 1.8; max-width: 260px; }
+    .footer-slogan { font-family: 'Cormorant Garamond', serif; font-size: 16px; font-style: italic; color: var(--rose); margin-top: 14px; display: block; }
+    .footer-col h4 { font-family: 'DM Sans', sans-serif; font-size: 11px; font-weight: 600; letter-spacing: 0.16em; text-transform: uppercase; color: var(--plum); margin-bottom: 18px; }
+    .footer-col ul { list-style: none; display: flex; flex-direction: column; gap: 11px; }
+    .footer-col ul li a { font-size: 13.5px; color: var(--plum); opacity: 0.58; text-decoration: none; transition: opacity 0.2s, color 0.2s; }
+    .footer-col ul li a:hover { opacity: 1; color: var(--rose); }
+    .footer-bottom { border-top: 1px solid var(--blush-light); padding-top: 28px; display: flex; justify-content: space-between; align-items: center; font-size: 12.5px; color: var(--plum); opacity: 0.45; max-width: 1200px; margin: 0 auto; flex-wrap: wrap; gap: 12px; }
+
+    /* ─── SCROLL ANIMATIONS ─── */
+    .fade-in { opacity: 0; transform: translateY(32px); transition: opacity 0.8s ease, transform 0.8s ease; }
+    .fade-in.visible { opacity: 1; transform: translateY(0); }
+    .delay-1 { transition-delay: 0.12s; }
+    .delay-2 { transition-delay: 0.24s; }
+    .delay-3 { transition-delay: 0.36s; }
+    .delay-4 { transition-delay: 0.48s; }
+    .delay-5 { transition-delay: 0.60s; }
+
+    /* ─── STICKY MOBILE CTA ─── */
+    .sticky-mobile-cta { display: none; position: fixed; bottom: 0; left: 0; right: 0; z-index: 900; padding: 12px 20px 16px; background: var(--white); border-top: 1px solid var(--blush-light); box-shadow: 0 -4px 24px rgba(44,26,34,0.12); opacity: 0; transform: translateY(100%); transition: opacity 0.35s ease, transform 0.35s ease; }
+    .sticky-mobile-cta.visible { opacity: 1; transform: translateY(0); }
+    .sticky-mobile-cta .btn { width: 100%; padding: 16px; font-size: 15px; font-weight: 600; }
+
+    /* ─── LIGHTBOX ─── */
+    .lightbox-overlay {
+      position: fixed; inset: 0; z-index: 9000;
+      background: rgba(44,26,34,0.96);
+      display: flex; align-items: center; justify-content: center;
+      opacity: 0; pointer-events: none;
+      transition: opacity 0.3s ease;
+    }
+    .lightbox-overlay.open { opacity: 1; pointer-events: auto; }
+    .lightbox-inner { position: relative; max-width: 90vw; max-height: 90vh; display: flex; align-items: center; justify-content: center; }
+    .lightbox-img {
+      max-width: 90vw; max-height: 85vh;
+      object-fit: contain;
+      image-rendering: -webkit-optimize-contrast;
+      image-rendering: high-quality;
+      display: block;
+      transform: scale(0.95);
+      transition: transform 0.3s ease;
+    }
+    .lightbox-overlay.open .lightbox-img { transform: scale(1); }
+    .lightbox-close {
+      position: fixed; top: 24px; right: 28px;
+      background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.25);
+      color: var(--white); width: 44px; height: 44px;
+      border-radius: 50%; cursor: pointer; font-size: 20px;
+      display: flex; align-items: center; justify-content: center;
+      transition: background 0.2s; z-index: 9010;
+    }
+    .lightbox-close:hover { background: rgba(255,255,255,0.25); }
+    .lightbox-arrow {
+      position: fixed; top: 50%; transform: translateY(-50%);
+      background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2);
+      color: var(--white); width: 52px; height: 52px;
+      border-radius: 50%; cursor: pointer; font-size: 22px;
+      display: flex; align-items: center; justify-content: center;
+      transition: background 0.2s; z-index: 9010;
+    }
+    .lightbox-arrow:hover { background: rgba(255,255,255,0.22); }
+    .lightbox-prev { left: 20px; }
+    .lightbox-next { right: 20px; }
+    .lightbox-counter { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%); color: rgba(255,255,255,0.55); font-size: 12px; letter-spacing: 0.1em; z-index: 9010; }
+
+    /* ─── SIZE GUIDE MODAL ─── */
+    .modal-overlay {
+      position: fixed; inset: 0; z-index: 8000;
+      background: rgba(44,26,34,0.65);
+      display: flex; align-items: center; justify-content: center;
+      padding: 20px;
+      opacity: 0; pointer-events: none;
+      transition: opacity 0.3s ease;
+    }
+    .modal-overlay.open { opacity: 1; pointer-events: auto; }
+    .modal-box {
+      background: var(--white); max-width: 560px; width: 100%;
+      max-height: 90vh; overflow-y: auto;
+      padding: 40px;
+      transform: translateY(20px);
+      transition: transform 0.3s ease;
+    }
+    .modal-overlay.open .modal-box { transform: translateY(0); }
+    .modal-header { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 28px; gap: 12px; }
+    .modal-title { font-family: 'Cormorant Garamond', serif; font-size: 30px; font-weight: 400; color: var(--plum); line-height: 1.1; }
+    .modal-close { background: none; border: none; cursor: pointer; color: var(--plum); opacity: 0.4; font-size: 24px; line-height: 1; flex-shrink: 0; transition: opacity 0.2s; }
+    .modal-close:hover { opacity: 1; }
+    .modal-section-label { font-size: 10px; font-weight: 600; letter-spacing: 0.16em; text-transform: uppercase; color: var(--rose); margin-bottom: 12px; }
+    .modal-dims { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 28px; }
+    .modal-dim-card { background: var(--cream); padding: 16px; text-align: center; }
+    .modal-dim-val { font-family: 'Cormorant Garamond', serif; font-size: 24px; font-weight: 500; color: var(--plum); display: block; }
+    .modal-dim-label { font-size: 11px; color: var(--plum); opacity: 0.55; margin-top: 4px; }
+    .size-table { width: 100%; border-collapse: collapse; font-size: 13.5px; margin-bottom: 24px; }
+    .size-table th { background: var(--plum); color: var(--cream); padding: 10px 14px; text-align: left; font-family: 'DM Sans', sans-serif; font-size: 11px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; }
+    .size-table td { padding: 10px 14px; border-bottom: 1px solid var(--blush-light); color: var(--plum); }
+    .size-table tr:nth-child(even) { background: var(--cream); }
+    .size-note { font-size: 13px; color: var(--plum); opacity: 0.6; line-height: 1.7; background: var(--cream); padding: 14px 16px; border-left: 3px solid var(--rose); }
+
+    /* ─── ADD-TO-CART TOAST ─── */
+    .cart-toast {
+      position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(80px);
+      background: var(--plum); color: var(--white);
+      padding: 14px 24px; font-size: 14px; font-weight: 500;
+      display: flex; align-items: center; gap: 10px;
+      z-index: 7000; opacity: 0;
+      transition: transform 0.35s ease, opacity 0.35s ease;
+      white-space: nowrap;
+    }
+    .cart-toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
+    .cart-toast a { color: var(--blush); text-decoration: underline; cursor: pointer; }
+
+    /* ─── RESPONSIVE ─── */
+    @media (max-width: 1100px) {
+      .features-grid { grid-template-columns: repeat(2, 1fr); }
+      .stats-grid { grid-template-columns: repeat(2, 1fr); }
+      .stat-item + .stat-item { border-left: none; }
+      .stats-grid .stat-item:nth-child(odd) { border-right: 1px solid rgba(245,224,224,0.25); }
+      .stats-grid .stat-item { padding: 20px; }
+      .footer-grid { grid-template-columns: 1fr 1fr; gap: 36px; }
+    }
+    @media (max-width: 768px) {
+      /* ── Header / Nav ── */
+      .header { padding: 0 20px; height: 64px; }
+      .nav { display: none; }
+      .nav.open { display: flex; flex-direction: column; position: fixed; top: 64px; left: 0; right: 0; background: var(--white); padding: 24px 28px; border-bottom: 1px solid var(--blush-light); box-shadow: 0 10px 32px rgba(44,26,34,0.1); z-index: 999; align-items: flex-start; gap: 20px; }
+      .nav-toggle { display: flex; }
+
+      /* ── Hero ── */
+      .hero { height: 100svh; min-height: 600px; }
+      .hero-bg { background-attachment: scroll !important; background-position: center center !important; background-size: cover !important; }
+      .hero-content { padding: 0 24px; max-width: 100%; text-align: center; align-items: center; }
+      .hero h1 { font-size: clamp(36px, 8vw, 52px); }
+      .hero-sub { font-size: 15px; }
+      .hero-overlay { background: rgba(44,26,34,0.60); }
+
+      /* ── Product section ── */
+      .product-section { grid-template-columns: 1fr; gap: 24px !important; padding: 40px 20px !important; }
+      .product-images { display: flex; flex-direction: column; grid-template-columns: 1fr !important; gap: 8px; }
+      .img-main { aspect-ratio: 4/3; width: 100%; }
+      .img-thumb { aspect-ratio: 4/3; width: 100%; }
+
+      /* ── Comparison ── */
+      .comparison-section { padding: 48px 20px !important; }
+      .comparison-table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+      .comparison-table { min-width: 480px; }
+
+      /* ── How It Works ── */
+      .how-it-works { padding: 48px 20px !important; }
+      .features-grid { grid-template-columns: 1fr !important; gap: 16px; padding: 0 20px; }
+
+      /* ── Why It Works ── */
+      .why-section { padding: 60px 20px; }
+      .why-grid { grid-template-columns: 1fr !important; gap: 16px; margin-top: 32px; }
+      .why-card { padding: 28px 20px; }
+
+      /* ── Stats ── */
+      .stats-section { padding: 48px 20px; }
+      .stats-grid { grid-template-columns: 1fr 1fr; gap: 0; }
+      .stat-item { padding: 24px 16px; border-bottom: 1px solid rgba(245,224,224,0.25); }
+      .stat-item + .stat-item { border-left: none; }
+      .stats-grid .stat-item:nth-child(odd) { border-right: none; }
+      .stat-number { font-size: 44px; }
+
+      /* ── Reviews ── */
+      .reviews-section { padding: 48px 20px !important; }
+      .reviews-grid { grid-template-columns: 1fr; gap: 20px; }
+
+      /* ── Bundle selector ── */
+      .bundle-options { flex-direction: column; gap: 10px; }
+      .bundle-btn { width: 100%; flex-direction: row; justify-content: space-between; align-items: center; padding: 16px 20px; }
+      .bundle-qty { font-size: 16px; }
+      .bundle-price { font-size: 16px; }
+      .bundle-tag { font-size: 10px; }
+      .bundle-original { display: inline; margin-right: 6px; }
+
+      /* ── FAQ / Footer / Misc ── */
+      .faq-section { padding: 48px 20px !important; }
+      .final-cta { padding: 80px 24px; }
+      .footer { padding: 48px 24px 32px; }
+      .footer-grid { grid-template-columns: 1fr; gap: 28px; }
+      .footer-bottom { flex-direction: column; text-align: center; }
+      .sticky-mobile-cta { display: block; }
+      .spec-row { grid-template-columns: 1fr; gap: 2px; }
+      .lightbox-arrow { width: 40px; height: 40px; font-size: 18px; }
+      .lightbox-prev { left: 8px; }
+      .lightbox-next { right: 8px; }
+      .modal-dims { grid-template-columns: 1fr 1fr; }
+    }
+    @media (max-width: 480px) {
+      .trust-badge { font-size: 11px; }
+      .stats-grid { grid-template-columns: 1fr 1fr; }
+      .modal-box { padding: 28px 20px; }
+    }
+
+    /* ─── STOCK URGENCY ─── */
+    .stock-urgency {
+      display: flex; align-items: center; gap: 8px;
+      font-size: 13px; font-weight: 600; color: var(--rose);
+      margin-bottom: 12px;
+    }
+    .stock-dot {
+      width: 8px; height: 8px; background: var(--rose);
+      border-radius: 50%; display: inline-block; flex-shrink: 0;
+      animation: pulse 1.5s ease-in-out infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.5; transform: scale(0.85); }
+    }
+
+    /* ─── REVIEW CAROUSEL ─── */
+    .reviews-carousel-wrap {
+      position: relative;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 56px;
+    }
+    .reviews-carousel {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+    }
+    .rev-arrow {
+      position: absolute;
+      top: 50%; transform: translateY(-50%);
+      background: var(--white);
+      border: 1.5px solid var(--blush);
+      color: var(--plum);
+      width: 44px; height: 44px;
+      border-radius: 50%;
+      font-size: 24px;
+      cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      z-index: 10;
+      transition: background 0.2s, color 0.2s, border-color 0.2s;
+      line-height: 1;
+      padding: 0;
+    }
+    .rev-arrow:hover { background: var(--rose); color: var(--white); border-color: var(--rose); }
+    .rev-prev { left: 0; }
+    .rev-next { right: 0; }
+    .rev-dots {
+      display: flex; justify-content: center; gap: 8px;
+      margin-top: 32px;
+    }
+    .rev-dot {
+      width: 8px; height: 8px; border-radius: 50%;
+      background: var(--blush);
+      border: none; cursor: pointer; padding: 0;
+      transition: background 0.2s, transform 0.2s;
+    }
+    .rev-dot.active { background: var(--rose); transform: scale(1.25); }
+
+    /* ─── WHY IT WORKS ─── */
+    .why-section { background: var(--cream); padding: 100px 60px; text-align: center; }
+    .why-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 32px; max-width: 1100px; margin: 48px auto 0; }
+    .why-card { background: var(--white); padding: 40px 32px; text-align: left; }
+    .why-icon { font-size: 36px; margin-bottom: 20px; }
+    .why-card h3 { font-family: 'Cormorant Garamond', serif; font-size: 22px; font-weight: 400; color: var(--plum); margin-bottom: 12px; }
+    .why-card p { font-size: 14px; color: var(--plum); opacity: 0.65; line-height: 1.8; }
+
+    @media (max-width: 768px) {
+      .reviews-carousel { grid-template-columns: 1fr; }
+      .reviews-carousel-wrap { padding: 0 44px; }
+      .why-grid { grid-template-columns: 1fr; }
+      .why-section { padding: 60px 24px; }
+    }
+
+    /* ─── SHOPIFY BUTTON WRAP ─── */
+    .shopify-btn-wrap {
+      width: 100%;
+      margin-top: 16px;
+    }
+    .shopify-btn-wrap iframe {
+      width: 100% !important;
+    }
+
+    /* ─── SHOPIFY BUY BUTTON ─── */
+    #product-component-1775507650016 iframe {
+      width: 100% !important;
+    }
+    #product-component-1775507650016 .shopify-buy__btn {
+      width: 100% !important;
+      padding: 18px 28px !important;
+      font-size: 15px !important;
+      font-weight: 700 !important;
+      letter-spacing: 0.05em !important;
+      border-radius: 0 !important;
+      background-color: #8B3A52 !important;
+      font-family: 'DM Sans', sans-serif !important;
+    }
+
+    /* Hide Shopify product card — show button only */
+    .shopify-buy__product-img-wrapper { display: none !important; }
+    .shopify-buy__product__title { display: none !important; }
+    .shopify-buy__product__price { display: none !important; }
+    .shopify-buy__product { background: none !important; box-shadow: none !important; padding: 0 !important; }
+    .shopify-buy__layout-vertical .shopify-buy__product { max-width: 100% !important; }
+    .shopify-buy-frame--product { width: 100% !important; }
+    .shopify-buy__btn-wrapper { width: 100% !important; }
+    .shopify-buy__btn {
+      width: 100% !important;
+      padding: 18px !important;
+      font-size: 15px !important;
+      font-weight: 700 !important;
+      letter-spacing: 0.05em !important;
+      border-radius: 0 !important;
+      background-color: #8B3A52 !important;
+      font-family: 'DM Sans', sans-serif !important;
+    }
+
+    /* ─── COMING SOON UPSELL ─── */
+    .upsell-coming-soon {
+      opacity: 0.7;
+      pointer-events: none;
+      border: 1.5px dashed var(--blush) !important;
+      background: var(--blush-light) !important;
+    }
+    .coming-soon-badge {
+      background: var(--rose);
+      color: var(--white);
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      padding: 3px 8px;
+      margin-left: 8px;
+      vertical-align: middle;
+    }
+
+    /* ─── BUNDLE ORIGINAL PRICE ─── */
+    .bundle-original {
+      font-size: 11px;
+      color: var(--plum);
+      opacity: 0.4;
+      text-decoration: line-through;
+      margin-bottom: -2px;
+    }
+
+    /* ─── BUNDLE SELECTOR ─── */
+    .bundle-selector { margin-bottom: 20px; }
+    .bundle-label {
+      font-size: 11px; font-weight: 600; letter-spacing: 0.12em;
+      text-transform: uppercase; color: var(--plum);
+      opacity: 0.6; margin-bottom: 10px;
+    }
+    .bundle-options { display: flex; gap: 10px; flex-wrap: wrap; }
+    .bundle-btn {
+      flex: 1; min-width: 90px;
+      border: 1.5px solid var(--blush);
+      background: var(--white);
+      padding: 14px 10px;
+      cursor: pointer;
+      display: flex; flex-direction: column; align-items: center; gap: 4px;
+      transition: border-color 0.2s, background 0.2s;
+    }
+    .bundle-btn:hover { border-color: var(--rose); }
+    .bundle-btn.bundle-active {
+      border-color: var(--rose) !important;
+      background: var(--blush-light) !important;
+    }
+    .bundle-qty {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 18px; font-weight: 500; color: var(--plum);
+    }
+    .bundle-price {
+      font-size: 15px; font-weight: 700; color: var(--rose);
+    }
+    .bundle-tag {
+      font-size: 10px; font-weight: 600; letter-spacing: 0.08em;
+      text-transform: uppercase; color: var(--plum); opacity: 0.55;
+    }
+    .bundle-btn.bundle-active .bundle-tag { color: var(--rose); opacity: 1; }
+    .bundle-friend-msg {
+      font-size: 13px; font-weight: 500; color: var(--rose);
+      margin-top: 10px; min-height: 18px;
+    }
+
+    /* Move and style Shopify cart toggle */
+    .shopify-buy__cart-toggle {
+      bottom: auto !important;
+      top: 18px !important;
+      right: 20px !important;
+      left: auto !important;
+      background-color: #8B3A52 !important;
+      border-radius: 0px !important;
+      width: 44px !important;
+      height: 44px !important;
+      box-shadow: none !important;
+    }
+    .shopify-buy__cart-toggle__count {
+      font-family: 'DM Sans', sans-serif !important;
+      font-size: 12px !important;
+      font-weight: 700 !important;
+      color: #FFFFFF !important;
+    }
+  </style>
+</head>
+<body>
+
+<!-- ─── ANNOUNCEMENT BAR ─── -->
+<div class="announcement-bar" aria-label="Promotions">
+  <div class="ann-track">
+    <span class="ann-item">🚚 Free shipping this week only on orders over $60 <span class="ann-dot"></span></span>
+    <span class="ann-item">CE · ROHS · FCC · UKCA Certified <span class="ann-dot"></span></span>
+    <span class="ann-item">Join 3,000+ women who stopped letting their period stop them <span class="ann-dot"></span></span>
+    <span class="ann-item">No power bank needed. Ever. <span class="ann-dot"></span></span>
+    <span class="ann-item">30-Day Money Back Guarantee — Feel relief or it's free <span class="ann-dot"></span></span>
+    <!-- duplicate for seamless loop -->
+    <span class="ann-item">🚚 Free shipping this week only on orders over $60 <span class="ann-dot"></span></span>
+    <span class="ann-item">CE · ROHS · FCC · UKCA Certified <span class="ann-dot"></span></span>
+    <span class="ann-item">Join 3,000+ women who stopped letting their period stop them <span class="ann-dot"></span></span>
+    <span class="ann-item">No power bank needed. Ever. <span class="ann-dot"></span></span>
+    <span class="ann-item">30-Day Money Back Guarantee — Feel relief or it's free <span class="ann-dot"></span></span>
+  </div>
+</div>
+
+<!-- ─── HEADER ─── -->
+<header class="header" id="mainHeader">
+  <a href="index.html" class="logo">Menstrela<sup>™</sup></a>
+  <nav class="nav" id="mainNav">
+    <a href="#story" class="nav-link">Our Story</a>
+    <a href="#how-it-works" class="nav-link">How It Works</a>
+    <a href="#reviews" class="nav-link">Reviews</a>
+    <a href="#faq" class="nav-link">FAQ</a>
+    <a href="cart.html" class="cart-btn" aria-label="View Cart">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>
+    </a>
+  </nav>
+  <button class="nav-toggle" id="navToggle" aria-label="Open menu">
+    <span></span><span></span><span></span>
+  </button>
+</header>
+
+<!-- ─── HERO ─── -->
+<section class="hero" id="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-overlay"></div>
+  <div class="hero-content">
+    <p class="hero-eyebrow">No cord. No power bank. No compromise.</p>
+    <h1>Your period shouldn't<br />cost you <em>a sick day.</em></h1>
+    <p class="hero-sub">Menstrela™ is the truly cordless wearable heat belt that moves with you — no cords, no power bank, no compromise. Relief in seconds. Invisible under your clothes.</p>
+    <div class="hero-cta-group">
+      <a href="#product" class="btn">Find Your Relief</a>
+      <a href="#how-it-works" class="hero-link">See how it works →</a>
+    </div>
+    <div class="trust-badges">
+      <span class="trust-badge"><span class="check">✓</span> Truly Cordless</span>
+      <span class="trust-badge"><span class="check">✓</span> No Power Bank</span>
+      <span class="trust-badge"><span class="check">✓</span> Heat + Vibration</span>
+      <span class="trust-badge"><span class="check">✓</span> 3,000+ Women</span>
+    </div>
+  </div>
+</section>
+
+<!-- ─── FEATURES STRIP ─── -->
+<div class="features-strip" aria-hidden="true">
+  <div class="strip-track">
+    <span class="strip-item">Built-In 1800mAh Battery <span class="strip-dot"></span></span>
+    <span class="strip-item">5 Heat Levels <span class="strip-dot"></span></span>
+    <span class="strip-item">4 Vibration Modes <span class="strip-dot"></span></span>
+    <span class="strip-item">Digital Display <span class="strip-dot"></span></span>
+    <span class="strip-item">Invisible Under Clothes <span class="strip-dot"></span></span>
+    <span class="strip-item">CE · ROHS · FCC · UKCA <span class="strip-dot"></span></span>
+    <span class="strip-item">Type-C Fast Charging <span class="strip-dot"></span></span>
+    <span class="strip-item">Smart Timer 15 / 30 min <span class="strip-dot"></span></span>
+    <span class="strip-item">Velvet Cotton Fabric <span class="strip-dot"></span></span>
+    <!-- duplicate -->
+    <span class="strip-item">Built-In 1800mAh Battery <span class="strip-dot"></span></span>
+    <span class="strip-item">5 Heat Levels <span class="strip-dot"></span></span>
+    <span class="strip-item">4 Vibration Modes <span class="strip-dot"></span></span>
+    <span class="strip-item">Digital Display <span class="strip-dot"></span></span>
+    <span class="strip-item">Invisible Under Clothes <span class="strip-dot"></span></span>
+    <span class="strip-item">CE · ROHS · FCC · UKCA <span class="strip-dot"></span></span>
+    <span class="strip-item">Type-C Fast Charging <span class="strip-dot"></span></span>
+    <span class="strip-item">Smart Timer 15 / 30 min <span class="strip-dot"></span></span>
+    <span class="strip-item">Velvet Cotton Fabric <span class="strip-dot"></span></span>
+  </div>
+</div>
+
+<!-- ─── PRODUCT SECTION ─── -->
+<section class="product-section" id="product">
+  <div class="product-images fade-in">
+    <div class="img-main" onclick="openLightbox(0)" title="Click to enlarge">
+      <img src="product-hero2.png" alt="Menstrela™ Cordless Heat Belt" loading="eager" />
+    </div>
+    <div class="img-thumb" onclick="openLightbox(1)" title="Click to enlarge">
+      <img src="product-detail2.png" alt="Menstrela™ Belt Detail" loading="eager" />
+    </div>
+    <div class="img-thumb" onclick="openLightbox(2)" title="Click to enlarge">
+      <img src="lifestyle-before2.png" alt="Menstrela™ Lifestyle" loading="eager" />
+    </div>
+  </div>
+
+  <div class="product-info fade-in delay-2">
+    <p class="product-subtitle">2026's Top-Rated Wearable Period Relief</p>
+    <h2 class="product-title">Menstrela™<br />Cordless Heat Belt</h2>
+    <div class="stars-row">
+      <span class="stars">★★★★★</span>
+      <span class="review-count">4.9 · 3,587 reviews</span>
+    </div>
+    <div class="price-row">
+      <span class="price-current">$54.99</span>
+      <span class="price-compare">$83.00</span>
+      <span class="save-badge">SAVE $28</span>
+    </div>
+    <p class="product-desc">The only period belt with a truly built-in battery. No cords. No power bank. Just relief that goes where you go.</p>
+    <ul class="feature-list">
+      <li><span class="check">✓</span><span>Truly cordless — built-in 1800mAh battery, <strong>no power bank needed</strong></span></li>
+      <li><span class="check">✓</span><span>Heat + vibration therapy — 5 heat levels + 4 vibration intensities</span></li>
+      <li><span class="check">✓</span><span>CE · ROHS · FCC · UKCA certified — invisible under any outfit</span></li>
+    </ul>
+
+    <!-- Size Guide button -->
+    <button class="size-guide-btn" onclick="openSizeGuide()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 7h18M3 12h18M3 17h10"/></svg>
+      Size Guide &amp; Dimensions
+    </button>
+
+    <!-- Full Specifications accordion -->
+    <div class="specs-accordion" id="specsAccordion">
+      <button class="specs-toggle" onclick="toggleSpecs()">
+        Full Specifications
+        <span class="specs-arrow">▼</span>
+      </button>
+      <div class="specs-body">
+        <div class="specs-inner">
+          <div class="spec-row"><span class="spec-label">Material</span><span class="spec-val">Thickened ABS + Velvet Cotton Fabric (skin-friendly)</span></div>
+          <div class="spec-row"><span class="spec-label">Screen Display</span><span class="spec-val">5 temperatures: 45°C / 50°C / 55°C / 60°C / 65°C · 4 vibration modes · Battery level indicator</span></div>
+          <div class="spec-row"><span class="spec-label">Timer</span><span class="spec-val">Smart timer: 15-minute and 30-minute settings with auto shut-off</span></div>
+          <div class="spec-row"><span class="spec-label">Vibration</span><span class="spec-val">4 intensity levels — 30% / 50% / 75% / 100%</span></div>
+          <div class="spec-row"><span class="spec-label">Battery</span><span class="spec-val">1800mAh Lithium Polymer · 2–3 hours use per charge · ~3 hours full charge time</span></div>
+          <div class="spec-row"><span class="spec-label">Charging</span><span class="spec-val">5V 2A via Type-C (50cm cable included) · LED: red = charging, green = full</span></div>
+          <div class="spec-row"><span class="spec-label">Certifications</span><span class="spec-val">CE · ROHS · FCC · UKCA</span></div>
+          <div class="spec-row"><span class="spec-label">Dimensions</span><span class="spec-val">17.5 × 8 × 2 cm · Weight: 234g</span></div>
+          <div class="spec-row"><span class="spec-label">Strap</span><span class="spec-val">Adjustable elastic — fits waist 60cm to 110cm</span></div>
+          <div class="spec-row"><span class="spec-label">Package</span><span class="spec-val">Heating belt · Type-C charging cable · Instruction manual (6 languages)</span></div>
+        </div>
+      </div>
+    </div>
+
+
+    <div class="upsell-box upsell-coming-soon">
+      <div class="upsell-label">
+        <div class="upsell-label-text">
+          <span class="upsell-name">Menstrela™ Heat Patches (10-pack) <span class="coming-soon-badge">COMING SOON</span></span>
+          <span class="upsell-meta">Disposable · 12-hour relief · Drug-free · Back soon</span>
+        </div>
+        <span class="upsell-price">$12.99</span>
+      </div>
+    </div>
+    <div class="bundle-selector">
+      <p class="bundle-label">How many do you need?</p>
+      <div class="bundle-options">
+        <button class="bundle-btn" data-qty="1" data-price="54.99" data-msg="">
+          <span class="bundle-qty">1 Belt</span>
+          <span class="bundle-original">$83.00</span>
+          <span class="bundle-price">$54.99</span>
+          <span class="bundle-tag">You save $28</span>
+        </button>
+        <button class="bundle-btn" data-qty="2" data-price="94.99" data-msg="Buy one for a friend!">
+          <span class="bundle-qty">2 Belts</span>
+          <span class="bundle-original">$109.98</span>
+          <span class="bundle-price">$94.99</span>
+          <span class="bundle-tag">Free Shipping</span>
+        </button>
+        <button class="bundle-btn" data-qty="3" data-price="134.99" data-msg="Best value — share the relief!">
+          <span class="bundle-qty">3 Belts</span>
+          <span class="bundle-original">$164.97</span>
+          <span class="bundle-price">$134.99</span>
+          <span class="bundle-tag">Best Value</span>
+        </button>
+      </div>
+      <p class="bundle-friend-msg" id="bundleFriendMsg"></p>
+    </div>
+    <div class="stock-urgency">
+      <span class="stock-dot"></span>
+      Only 47 left in stock — order soon
+    </div>
+    <div class="shopify-btn-wrap">
+      <button class="btn add-to-cart-btn" id="addToCartBtn" style="width:100%;padding:18px;font-size:15px;font-weight:700;letter-spacing:0.05em;">Add to Cart — $54.99</button>
+    </div>
+    <div class="guarantee-row">
+      <div class="guarantee-item"><span class="g-icon">🚚</span><span>Free Shipping<br/>over $60</span></div>
+      <div class="guarantee-item"><span class="g-icon">↩</span><span>30-Day<br/>Guarantee</span></div>
+      <div class="guarantee-item"><span class="g-icon">🔒</span><span>Secure<br/>Payment</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── COMPARISON ─── -->
+<section class="comparison-section grain fade-in" id="story">
+  <p class="section-eyebrow">Why Menstrela™</p>
+  <h2 class="section-title">We don't just heat.<br /><em>We move with you.</em></h2>
+  <p class="section-sub">Some brands require an external power bank. We thought that was unacceptable. So we built the battery in.</p>
+  <div class="comparison-table-wrap">
+    <table class="comparison-table">
+      <thead>
+        <tr>
+          <th>Feature</th>
+          <th class="highlight">Menstrela™</th>
+          <th>Others</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>Truly Cordless (no power bank)</td><td><span class="icon-yes">✓</span></td><td><span class="icon-no">✕</span></td></tr>
+        <tr><td>Built-In Battery</td><td><span class="icon-yes">✓</span></td><td><span class="icon-no">✕</span></td></tr>
+        <tr><td>Vibration + Heat Combined</td><td><span class="icon-yes">✓</span></td><td><span class="icon-no">✕</span></td></tr>
+        <tr><td>Digital Display</td><td><span class="icon-yes">✓</span></td><td><span class="icon-no">✕</span></td></tr>
+        <tr><td>Wears Under Clothing</td><td><span class="icon-yes">✓</span></td><td><span class="icon-partial">✓</span></td></tr>
+        <tr><td>CE / ROHS / FCC / UKCA Certified</td><td><span class="icon-yes">✓</span></td><td><span class="icon-no">✕</span></td></tr>
+        <tr><td>Smart Auto Shut-Off Timer</td><td><span class="icon-yes">✓</span></td><td><span class="icon-no">✕</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="comparison-note">Some brands require an external power bank to operate — a fact they bury deep in their FAQ. We thought that was unacceptable. So we built the battery in.</p>
+</section>
+
+<!-- ─── HOW IT WORKS ─── -->
+<section class="how-it-works" id="how-it-works">
+  <div class="section-header fade-in">
+    <p class="section-eyebrow">How It Works</p>
+    <h2 class="section-title">Six reasons she never<br /><em>reaches for ibuprofen again.</em></h2>
+  </div>
+  <div class="features-grid">
+    <div class="feature-card fade-in">
+      <div class="feature-number">01</div>
+      <h3>Truly Cordless Freedom</h3>
+      <p>A built-in 1800mAh rechargeable battery means you charge it like your phone and wear it anywhere. No wires dangling at your waist. No power bank. Just pure, portable relief.</p>
+    </div>
+    <div class="feature-card fade-in delay-1">
+      <div class="feature-number">02</div>
+      <h3>4 Vibration Modes + 5 Heat Levels</h3>
+      <p>4 vibration intensities at 30%, 50%, 75%, 100% combined with 5 heat levels from 45°C to 65°C work together to relax muscles, increase circulation, and dissolve cramps faster than heat alone.</p>
+    </div>
+    <div class="feature-card fade-in delay-2">
+      <div class="feature-number">03</div>
+      <h3>Warmth in Seconds</h3>
+      <p>Graphene heating technology means you feel real warmth almost instantly. No warming-up period. Immediate relief — because when you're in pain, every second matters.</p>
+    </div>
+    <div class="feature-card fade-in delay-1">
+      <div class="feature-number">04</div>
+      <h3>Invisible Under Any Outfit</h3>
+      <p>Soft velvet cotton fabric and a slim profile sit flush against your skin and disappear under any clothing. Wear it to work, the gym, dates, and meetings. Nobody ever knows.</p>
+    </div>
+    <div class="feature-card fade-in delay-2">
+      <div class="feature-number">05</div>
+      <h3>Digital Precision Display</h3>
+      <p>A clear digital screen shows your exact temperature, vibration mode, and battery level at all times. Adjust up or down with one touch. Total control over your relief.</p>
+    </div>
+    <div class="feature-card fade-in delay-3">
+      <div class="feature-number">06</div>
+      <h3>Built to Last</h3>
+      <p>1800mAh battery provides 2–3 hours per charge. CE, ROHS, FCC, UKCA certified for global safety standards. Smart auto shut-off timer at 15 or 30 minutes. Type-C charging with LED indicators.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ─── WHY IT WORKS ─── -->
+<section class="why-section">
+  <p class="section-eyebrow">The Science Behind The Relief</p>
+  <h2 class="section-title">Why heat <em>actually works</em> for cramps</h2>
+  <p class="section-sub">Period cramps happen when uterine muscles contract and cut off oxygen. Here's how Menstrela interrupts that cycle.</p>
+  <div class="why-grid">
+    <div class="why-card fade-in">
+      <div class="why-icon"></div>
+      <h3>Heat relaxes muscles</h3>
+      <p>Gentle heat increases blood flow to the lower abdomen, relaxing the uterine muscles that cause cramping — the same reason a hot water bottle helps, but faster and hands-free.</p>
+    </div>
+    <div class="why-card fade-in delay-1">
+      <div class="why-icon"></div>
+      <h3>Vibration breaks the pain signal</h3>
+      <p>Gentle vibration stimulates nerve endings that compete with pain signals — similar to why rubbing a bump helps. Combined with heat, it works significantly faster than heat alone.</p>
+    </div>
+    <div class="why-card fade-in delay-2">
+      <div class="why-icon"></div>
+      <h3>Cordless means consistent</h3>
+      <p>Relief only works when you keep it on. A cord means you take it off. A built-in battery means you forget it's there — which means it keeps working while you keep living.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ─── STATS ─── -->
+<section class="stats-section">
+  <div class="stats-grid">
+    <div class="stat-item fade-in"><div class="stat-number" data-target="94">0%</div><div class="stat-label">Felt relief<br />within 5 minutes</div></div>
+    <div class="stat-item fade-in delay-1"><div class="stat-number" data-target="91">0%</div><div class="stat-label">Wore it to work<br />completely unnoticed</div></div>
+    <div class="stat-item fade-in delay-2"><div class="stat-number" data-target="88">0%</div><div class="stat-label">No more<br />monthly sick days</div></div>
+    <div class="stat-item fade-in delay-3"><div class="stat-number" data-target="96">0%</div><div class="stat-label">Would recommend<br />to a friend</div></div>
+  </div>
+</section>
+
+<!-- ─── REVIEWS ─── -->
+<section class="reviews-section grain" id="reviews">
+  <div class="section-header fade-in">
+    <p class="section-eyebrow">Real Women. Real Relief.</p>
+    <h2 class="section-title">What happens when 3,000+ women<br /><em>stop suffering in silence.</em></h2>
+  </div>
+  <div class="reviews-carousel-wrap">
+    <button class="rev-arrow rev-prev" onclick="slideReviews(-1)" aria-label="Previous">‹</button>
+    <div class="reviews-carousel" id="reviewsCarousel">
+      <div class="review-card">
+        <div class="review-stars">★★★★☆</div>
+        <span class="review-quote-mark">"</span>
+        <p class="review-text">I used to call in sick literally every month. Had this for 6 weeks and haven't missed a single day of work. Wore it to a meeting last Tuesday — nobody had a clue. Honestly wish I'd found it sooner.</p>
+        <div class="review-author"><div class="author-avatar">S</div><div class="author-info"><span class="author-name">Serenity M.</span><span class="author-meta">Toronto, Canada <span class="verified-badge">✓ VERIFIED</span></span></div></div>
+      </div>
+      <div class="review-card">
+        <div class="review-stars">★★★★★</div>
+        <span class="review-quote-mark">"</span>
+        <p class="review-text">Ok so I bought the other popular one first. Found out AFTER it arrived that it needs a whole separate power bank?? Returned it immediately. Got Menstrela instead and this is actually what I thought I was getting the first time.</p>
+        <div class="review-author"><div class="author-avatar">K</div><div class="author-info"><span class="author-name">Kelsey R.</span><span class="author-meta">New York, USA <span class="verified-badge">✓ VERIFIED</span></span></div></div>
+      </div>
+      <div class="review-card">
+        <div class="review-stars">★★★★★</div>
+        <span class="review-quote-mark">"</span>
+        <p class="review-text">The vibration + heat together is honestly something else. Cramps were basically gone in like 4 minutes. I'm not exaggerating at all. I actually teared up a little because I've been dealing with this pain for years.</p>
+        <div class="review-author"><div class="author-avatar">A</div><div class="author-info"><span class="author-name">Amara J.</span><span class="author-meta">Chicago, USA <span class="verified-badge">✓ VERIFIED</span></span></div></div>
+      </div>
+      <div class="review-card">
+        <div class="review-stars">★★★★★</div>
+        <span class="review-quote-mark">"</span>
+        <p class="review-text">Been using it for 2 months now. I genuinely don't dread my period anymore which is something I never thought I'd say. The heat kicks in so fast and the vibration setting is everything.</p>
+        <div class="review-author"><div class="author-avatar">M</div><div class="author-info"><span class="author-name">Maya T.</span><span class="author-meta">Vancouver, Canada <span class="verified-badge">✓ VERIFIED</span></span></div></div>
+      </div>
+      <div class="review-card">
+        <div class="review-stars">★★★★★</div>
+        <span class="review-quote-mark">"</span>
+        <p class="review-text">I was skeptical because I'd tried heating pads before and they never really helped enough. This is different. The combination of heat AND vibration together actually does something. 10/10.</p>
+        <div class="review-author"><div class="author-avatar">P</div><div class="author-info"><span class="author-name">Priya S.</span><span class="author-meta">Austin, USA <span class="verified-badge">✓ VERIFIED</span></span></div></div>
+      </div>
+      <div class="review-card">
+        <div class="review-stars">★★★★☆</div>
+        <span class="review-quote-mark">"</span>
+        <p class="review-text">It's really good, only wish it came in more colors lol. But the relief is real — I wore it on a 3 hour flight during my period and it was genuinely fine. Would 100% recommend.</p>
+        <div class="review-author"><div class="author-avatar">J</div><div class="author-info"><span class="author-name">Jordan L.</span><span class="author-meta">Montreal, Canada <span class="verified-badge">✓ VERIFIED</span></span></div></div>
+      </div>
+    </div>
+    <button class="rev-arrow rev-next" onclick="slideReviews(1)" aria-label="Next">›</button>
+    <div class="rev-dots" id="revDots"></div>
+  </div>
+</section>
+
+<!-- ─── FAQ ─── -->
+<section class="faq-section" id="faq">
+  <div class="section-header fade-in">
+    <p class="section-eyebrow">Questions & Answers</p>
+    <h2 class="section-title"><em>Everything you need to know</em><br />before you order.</h2>
+  </div>
+  <div class="faq-list">
+    <div class="faq-item open" id="faq1">
+      <button class="faq-question" onclick="toggleFaq('faq1')">Do I need a power bank to use Menstrela™?<span class="faq-icon">+</span></button>
+      <div class="faq-answer" style="max-height:200px;"><p class="faq-answer-inner">Never. Menstrela has a built-in 1800mAh rechargeable battery — just charge it like your phone and wear it anywhere. No cords, no power bank, no being tethered to a wall.</p></div>
+    </div>
+    <div class="faq-item" id="faq2">
+      <button class="faq-question" onclick="toggleFaq('faq2')">How long does the battery last?<span class="faq-icon">+</span></button>
+      <div class="faq-answer"><p class="faq-answer-inner">The 1800mAh battery provides 2–3 hours of continuous heat and vibration on a full charge. Full recharge takes approximately 3 hours via the included Type-C cable. The LED indicator turns green when fully charged.</p></div>
+    </div>
+    <div class="faq-item" id="faq3">
+      <button class="faq-question" onclick="toggleFaq('faq3')">Will anyone be able to see it under my clothes?<span class="faq-icon">+</span></button>
+      <div class="faq-answer"><p class="faq-answer-inner">No — Menstrela's slim 2cm profile sits flush against your body and disappears under any outfit. The adjustable strap fits waists 60cm to 110cm. Our customers wear it to work, the gym, on dates, and in meetings. Nobody ever knows.</p></div>
+    </div>
+    <div class="faq-item" id="faq4">
+      <button class="faq-question" onclick="toggleFaq('faq4')">How quickly does it heat up?<span class="faq-icon">+</span></button>
+      <div class="faq-answer"><p class="faq-answer-inner">Using graphene heating technology, you'll feel warmth within seconds. Choose from 5 precise temperatures: 45°C, 50°C, 55°C, 60°C, or 65°C. The digital display shows your exact setting at all times.</p></div>
+    </div>
+    <div class="faq-item" id="faq5">
+      <button class="faq-question" onclick="toggleFaq('faq5')">What if it doesn't work for me?<span class="faq-icon">+</span></button>
+      <div class="faq-answer"><p class="faq-answer-inner">We offer a full 30-day money back guarantee. If you don't feel relief within 30 days, we'll refund you completely — no questions asked. We're that confident it will change how you experience your period.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── FINAL CTA ─── -->
+<section class="final-cta fade-in">
+  <p class="section-eyebrow" style="color:var(--blush);">Join 3,000+ Women</p>
+  <h2>Your period deserves better<br /><em>than another sick day.</em></h2>
+  <p>Join 3,000+ women who chose relief that actually moves with them. Truly cordless. Truly effective. Truly yours.</p>
+  <a href="#product" class="btn">Get Menstrela™</a>
+  <p class="final-cta-meta">Free shipping over $60 &nbsp;·&nbsp; 30-day guarantee &nbsp;·&nbsp; CE · ROHS · FCC · UKCA certified</p>
+</section>
+
+<!-- ─── FOOTER ─── -->
+<footer class="footer">
+  <div class="footer-grid">
+    <div class="footer-brand">
+      <a href="index.html" class="logo">Menstrela<sup>™</sup></a>
+      <p>Premium cordless period relief, designed for real life. CE · ROHS · FCC · UKCA certified for your safety.</p>
+      <span class="footer-slogan">"Relief that moves with you."</span>
+    </div>
+    <div class="footer-col"><h4>Shop</h4><ul><li><a href="#product">Heat Belt — $54.99</a></li><li><a href="#product">Heat Patches — $12.99</a></li></ul></div>
+    <div class="footer-col"><h4>Support</h4><ul><li><a href="#faq">FAQ</a></li><li><a href="#">Shipping Info</a></li><li><a href="#">Returns Policy</a></li><li><a href="#">Contact Us</a></li></ul></div>
+    <div class="footer-col"><h4>Company</h4><ul><li><a href="#story">Our Story</a></li><li><a href="#">Privacy Policy</a></li><li><a href="#">Terms of Service</a></li></ul></div>
+  </div>
+  <div class="footer-bottom">
+    <span>© 2026 Menstrela™. All rights reserved.</span>
+    <span>CE · ROHS · FCC · UKCA Certified</span>
+  </div>
+</footer>
+
+<!-- ─── STICKY MOBILE CTA ─── -->
+<div class="sticky-mobile-cta" id="stickyMobileCta">
+  <a href="#product" class="btn">Find Your Relief</a>
+</div>
+
+<!-- ─── LIGHTBOX ─── -->
+<div class="lightbox-overlay" id="lightboxOverlay" onclick="lightboxClickOutside(event)">
+  <button class="lightbox-close" onclick="closeLightbox()" aria-label="Close">✕</button>
+  <button class="lightbox-arrow lightbox-prev" onclick="lightboxNav(-1)" aria-label="Previous">‹</button>
+  <div class="lightbox-inner">
+    <img class="lightbox-img" id="lightboxImg" src="" alt="" />
+  </div>
+  <button class="lightbox-arrow lightbox-next" onclick="lightboxNav(1)" aria-label="Next">›</button>
+  <div class="lightbox-counter" id="lightboxCounter">1 / 3</div>
+</div>
+
+<!-- ─── SIZE GUIDE MODAL ─── -->
+<div class="modal-overlay" id="sizeGuideModal" onclick="modalClickOutside(event)">
+  <div class="modal-box" id="sizeGuideBox">
+    <div class="modal-header">
+      <h2 class="modal-title">Size Guide &<br />Dimensions</h2>
+      <button class="modal-close" onclick="closeSizeGuide()" aria-label="Close">✕</button>
+    </div>
+    <p class="modal-section-label">Product Dimensions</p>
+    <div class="modal-dims">
+      <div class="modal-dim-card"><span class="modal-dim-val">17.5 × 8cm</span><span class="modal-dim-label">Belt size</span></div>
+      <div class="modal-dim-card"><span class="modal-dim-val">2 cm</span><span class="modal-dim-label">Thickness</span></div>
+      <div class="modal-dim-card"><span class="modal-dim-val">234 g</span><span class="modal-dim-label">Weight</span></div>
+    </div>
+    <p class="modal-section-label">Strap Fit Guide</p>
+    <table class="size-table">
+      <thead><tr><th>Size</th><th>Waist (cm)</th><th>Waist (inches)</th><th>Fit</th></tr></thead>
+      <tbody>
+        <tr><td>XS / S</td><td>60 – 72 cm</td><td>24 – 28"</td><td>Snug & supportive</td></tr>
+        <tr><td>M / L</td><td>72 – 90 cm</td><td>28 – 35"</td><td>Comfortable fit</td></tr>
+        <tr><td>XL / XXL</td><td>90 – 110 cm</td><td>35 – 43"</td><td>Full coverage</td></tr>
+      </tbody>
+    </table>
+    <p class="size-note">The adjustable elastic strap fits all body sizes from 60cm to 110cm waist. One size fits all — simply adjust the strap for your perfect fit. The belt sits flat against the lower abdomen for targeted cramp relief.</p>
+  </div>
+</div>
+
+<!-- ─── TOAST ─── -->
+<div class="cart-toast" id="cartToast">
+  ✓ Added to cart
+</div>
+
+<script>
+// ─── BUNDLE + CART SYSTEM ───
+const PRODUCTS = {
+  belt1: {
+    name: 'Menstrela™ Heat Belt — 1 Pack',
+    price: 54.99,
+    checkoutUrl: 'https://mbze2f-ir.myshopify.com/cart/43746042839105:1?channel=buy_button',
+    img: 'product-hero2.png'
+  },
+  belt2: {
+    name: 'Menstrela™ Heat Belt — 2 Pack',
+    price: 94.99,
+    checkoutUrl: 'https://mbze2f-ir.myshopify.com/cart/43746397257793:1?channel=buy_button',
+    img: 'product-hero2.png'
+  },
+  belt3: {
+    name: 'Menstrela™ Heat Belt — 3 Pack',
+    price: 134.99,
+    checkoutUrl: 'https://mbze2f-ir.myshopify.com/cart/43746401419329:1?channel=buy_button',
+    img: 'product-hero2.png'
+  },
+  patches: {
+    name: 'Menstrela™ Heat Patches (10-pack)',
+    price: 12.99,
+    img: 'menstrela-heat-belt-cart.png'
+  }
+};
+
+let selectedBundle = 'belt1';
+let hasPatches = false;
+
+// Bundle selector
+function initBundles() {
+  const btns = document.querySelectorAll('.bundle-btn');
+  btns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      btns.forEach(b => b.classList.remove('bundle-active'));
+      btn.classList.add('bundle-active');
+      const qty = parseInt(btn.dataset.qty);
+      if (qty === 1) selectedBundle = 'belt1';
+      if (qty === 2) selectedBundle = 'belt2';
+      if (qty === 3) selectedBundle = 'belt3';
+      const price = parseFloat(btn.dataset.price);
+      const msg = btn.dataset.msg || '';
+      const msgEl = document.getElementById('bundleFriendMsg');
+      if (msgEl) msgEl.textContent = msg;
+      document.getElementById('addToCartBtn').textContent = 'Add to Cart — $' + price.toFixed(2);
+    });
+  });
+  if (btns.length > 0) {
+    btns[0].classList.add('bundle-active');
+  }
+}
+initBundles();
+
+// Add to cart
+document.getElementById('addToCartBtn').addEventListener('click', () => {
+  const product = PRODUCTS[selectedBundle];
+  const cartData = {
+    bundle: selectedBundle,
+    beltName: product.name,
+    beltPrice: product.price,
+    beltImg: product.img,
+    checkoutUrl: product.checkoutUrl,
+    patches: hasPatches,
+    patchPrice: PRODUCTS.patches.price
+  };
+  const encoded = encodeURIComponent(JSON.stringify(cartData));
+  window.location.href = 'cart.html?data=' + encoded;
+});
+
+// Sticky header
+window.addEventListener('scroll', () => {
+  document.getElementById('mainHeader').classList.toggle('scrolled', window.scrollY > 10);
+}, { passive: true });
+
+// Mobile nav
+document.getElementById('navToggle').addEventListener('click', () => {
+  document.getElementById('mainNav').classList.toggle('open');
+});
+
+// Sticky mobile CTA
+const stickyBtn = document.getElementById('stickyMobileCta');
+const heroEl = document.getElementById('hero');
+if (stickyBtn && heroEl) {
+  new IntersectionObserver(entries => {
+    entries.forEach(e => stickyBtn.classList.toggle('visible', !e.isIntersecting));
+  }, { threshold: 0 }).observe(heroEl);
+}
+
+// Scroll animations
+const fadeObs = new IntersectionObserver(entries => {
+  entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+}, { threshold: 0.08, rootMargin: '0px 0px -40px 0px' });
+document.querySelectorAll('.fade-in').forEach(el => fadeObs.observe(el));
+
+// Stat counter
+let counted = false;
+const statsObs = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting && !counted) {
+      counted = true;
+      document.querySelectorAll('.stat-number[data-target]').forEach(el => {
+        const target = parseInt(el.dataset.target);
+        let cur = 0;
+        const t = setInterval(() => {
+          cur = Math.min(cur + target / 90, target);
+          el.textContent = Math.floor(cur) + '%';
+          if (cur >= target) clearInterval(t);
+        }, 18);
+      });
+    }
+  });
+}, { threshold: 0.3 });
+const statsSection = document.querySelector('.stats-section');
+if (statsSection) statsObs.observe(statsSection);
+
+// FAQ
+function toggleFaq(id) {
+  const item = document.getElementById(id);
+  const answer = item.querySelector('.faq-answer');
+  const isOpen = item.classList.contains('open');
+  document.querySelectorAll('.faq-item.open').forEach(o => {
+    o.classList.remove('open');
+    o.querySelector('.faq-answer').style.maxHeight = '0';
+  });
+  if (!isOpen) {
+    item.classList.add('open');
+    answer.style.maxHeight = answer.scrollHeight + 40 + 'px';
+  }
+}
+
+// Specs accordion
+function toggleSpecs() {
+  document.getElementById('specsAccordion').classList.toggle('open');
+}
+
+// Lightbox
+const lightboxImages = ['product-hero2.png', 'product-detail2.png', 'lifestyle-before2.png'];
+const lightboxAlts = ['Menstrela™ Cordless Heat Belt', 'Belt Detail', 'Lifestyle'];
+let currentLightboxIndex = 0;
+function openLightbox(index) {
+  currentLightboxIndex = index;
+  showLightboxImage();
+  document.getElementById('lightboxOverlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+function closeLightbox() {
+  document.getElementById('lightboxOverlay').classList.remove('open');
+  document.body.style.overflow = '';
+}
+function showLightboxImage() {
+  const img = document.getElementById('lightboxImg');
+  img.src = lightboxImages[currentLightboxIndex];
+  img.alt = lightboxAlts[currentLightboxIndex];
+  document.getElementById('lightboxCounter').textContent = (currentLightboxIndex + 1) + ' / ' + lightboxImages.length;
+}
+function lightboxNav(dir) {
+  currentLightboxIndex = (currentLightboxIndex + dir + lightboxImages.length) % lightboxImages.length;
+  showLightboxImage();
+}
+function lightboxClickOutside(e) {
+  if (e.target === document.getElementById('lightboxOverlay')) closeLightbox();
+}
+document.addEventListener('keydown', e => {
+  if (!document.getElementById('lightboxOverlay').classList.contains('open')) return;
+  if (e.key === 'Escape') closeLightbox();
+  if (e.key === 'ArrowLeft') lightboxNav(-1);
+  if (e.key === 'ArrowRight') lightboxNav(1);
+});
+
+// Size guide
+function openSizeGuide() {
+  document.getElementById('sizeGuideModal').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+function closeSizeGuide() {
+  document.getElementById('sizeGuideModal').classList.remove('open');
+  document.body.style.overflow = '';
+}
+function modalClickOutside(e) {
+  if (e.target === document.getElementById('sizeGuideModal')) closeSizeGuide();
+}
+
+// Review carousel
+let revIndex = 0;
+function visibleRevs() { return window.innerWidth <= 768 ? 1 : 3; }
+function getRevCards() { return document.querySelectorAll('.reviews-carousel .review-card'); }
+function maxRevIndex() { return Math.max(0, getRevCards().length - visibleRevs()); }
+function buildRevDots() {
+  const dotsEl = document.getElementById('revDots');
+  if (!dotsEl) return;
+  dotsEl.innerHTML = '';
+  for (let i = 0; i <= maxRevIndex(); i++) {
+    const d = document.createElement('button');
+    d.className = 'rev-dot' + (i === 0 ? ' active' : '');
+    d.setAttribute('aria-label', 'Review page ' + (i+1));
+    d.onclick = () => goToRev(i);
+    dotsEl.appendChild(d);
+  }
+}
+function goToRev(index) {
+  revIndex = Math.max(0, Math.min(index, maxRevIndex()));
+  const cards = getRevCards();
+  const vis = visibleRevs();
+  cards.forEach((card, i) => {
+    card.style.display = (i >= revIndex && i < revIndex + vis) ? 'flex' : 'none';
+    card.style.flexDirection = 'column';
+  });
+  document.querySelectorAll('.rev-dot').forEach((d, i) => {
+    d.classList.toggle('active', i === revIndex);
+  });
+}
+function slideReviews(dir) { goToRev(revIndex + dir); }
+buildRevDots();
+goToRev(0);
+window.addEventListener('resize', () => { buildRevDots(); goToRev(0); });
+</script>
+
+</body>
+</html>
