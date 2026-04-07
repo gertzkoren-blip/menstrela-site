@@ -62,7 +62,7 @@
     .cart-item-remove:hover { opacity: 1; color: var(--rose); }
 
     /* UPSELL */
-    .upsell-suggestion { background: var(--white); border: 1.5px solid var(--blush); padding: 20px 24px; margin-top: 24px; display: flex; align-items: center; gap: 16px; }
+    .upsell-suggestion { background: var(--white); border: 1.5px dashed var(--blush); padding: 20px 24px; margin-top: 24px; display: flex; align-items: center; gap: 16px; opacity: 0.6; pointer-events: none; cursor: default; }
     .upsell-img { width: 56px; height: 56px; background: radial-gradient(#F5E0E0, #E8C4C4); flex-shrink: 0; overflow: hidden; }
     .upsell-img img { width: 100%; height: 100%; object-fit: cover; }
     .upsell-text { flex: 1; }
@@ -110,6 +110,22 @@
     [class*="cart-toggle"] { display: none !important; }
     iframe { max-width: 100%; }
     div[id*="shopify-buy-modal"] { display: none !important; }
+
+    /* ALTERNATIVE BUNDLE BUTTONS (remove popup) */
+    .alt-option-btn {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 16px 20px;
+      border: 1.5px solid #E8C4C4;
+      background: #fff;
+      cursor: pointer;
+      transition: border-color 0.2s, background 0.2s;
+      font-family: 'DM Sans', sans-serif;
+    }
+    .alt-option-btn:hover { border-color: #8B3A52; background: #F5E0E0; }
+    .alt-option-name { font-size: 15px; font-weight: 500; color: #2C1A22; }
+    .alt-option-price { font-family: 'Cormorant Garamond', serif; font-size: 20px; color: #8B3A52; font-weight: 500; }
   </style>
 </head>
 <body>
@@ -210,6 +226,19 @@ body > iframe { display: none !important; }
 <div class="footer-simple">© 2026 Menstrela™. All rights reserved. · CE · ROHS · FCC · UKCA Certified</div>
 
 <script>
+// Aggressively hide Shopify toggle
+function hideShopifyToggle() {
+  const allIframes = document.querySelectorAll('iframe');
+  allIframes.forEach(iframe => {
+    if (iframe.src && iframe.src.includes('shopify')) {
+      iframe.style.display = 'none';
+    }
+  });
+  const toggles = document.querySelectorAll('[class*="toggle"], [id*="toggle"]');
+  toggles.forEach(el => el.style.display = 'none');
+}
+setInterval(hideShopifyToggle, 500);
+
 const FREE_SHIPPING = 60;
 const PATCH_PRICE = 12.99;
 const SHIPPING_COST = 4.99;
@@ -274,7 +303,7 @@ function render() {
         <div class="cart-item-meta">Built-in battery · Truly cordless</div>
       </div>
       <div class="cart-item-price">$${cartData.beltPrice.toFixed(2)}</div>
-      <button class="cart-item-remove" onclick="window.location.href='index.html'" aria-label="Remove">✕</button>
+      <button class="cart-item-remove" onclick="showRemovePopup()" aria-label="Remove">✕</button>
     </div>
   `;
 
@@ -294,8 +323,57 @@ function render() {
 }
 
 function addPatches() {
-  hasPatches = true;
+  // Coming soon - do nothing
+  return;
+}
+
+const ALTERNATIVES = {
+  belt1: [
+    { key: 'belt2', name: '2 Belts — Buy one for a friend', price: '$94.99', tag: 'Free Shipping' },
+    { key: 'belt3', name: '3 Belts — Best value', price: '$134.99', tag: 'Best Value' }
+  ],
+  belt2: [
+    { key: 'belt1', name: '1 Belt — Standard', price: '$54.99', tag: 'You save $28' },
+    { key: 'belt3', name: '3 Belts — Best value', price: '$134.99', tag: 'Best Value' }
+  ],
+  belt3: [
+    { key: 'belt1', name: '1 Belt — Standard', price: '$54.99', tag: 'You save $28' },
+    { key: 'belt2', name: '2 Belts — Buy one for a friend', price: '$94.99', tag: 'Free Shipping' }
+  ]
+};
+
+function showRemovePopup() {
+  const popup = document.getElementById('removePopup');
+  popup.style.display = 'flex';
+  const bundle = cartData ? cartData.bundle : 'belt1';
+  const alts = ALTERNATIVES[bundle] || ALTERNATIVES['belt1'];
+  const container = document.getElementById('alternativeOptions');
+  container.innerHTML = alts.map(alt => `
+    <button class="alt-option-btn" onclick="switchBundle('${alt.key}')">
+      <div style="text-align:left;">
+        <div class="alt-option-name">${alt.name}</div>
+        <div style="font-size:11px;color:#8B3A52;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;margin-top:3px;">${alt.tag}</div>
+      </div>
+      <div class="alt-option-price">${alt.price}</div>
+    </button>
+  `).join('');
+}
+
+function switchBundle(bundleKey) {
+  const BUNDLE_DATA = {
+    belt1: { bundle: 'belt1', beltName: 'Menstrela™ Heat Belt — 1 Pack', beltPrice: 54.99, beltImg: 'menstrela-heat-belt-cart.png', checkoutUrl: 'https://mbze2f-ir.myshopify.com/cart/43746042839105:1?channel=buy_button' },
+    belt2: { bundle: 'belt2', beltName: 'Menstrela™ Heat Belt — 2 Pack', beltPrice: 94.99, beltImg: 'menstrela-heat-belt-cart.png', checkoutUrl: 'https://mbze2f-ir.myshopify.com/cart/43746397257793:1?channel=buy_button' },
+    belt3: { bundle: 'belt3', beltName: 'Menstrela™ Heat Belt — 3 Pack', beltPrice: 134.99, beltImg: 'menstrela-heat-belt-cart.png', checkoutUrl: 'https://mbze2f-ir.myshopify.com/cart/43746401419329:1?channel=buy_button' }
+  };
+  cartData = BUNDLE_DATA[bundleKey];
+  hasPatches = false;
+  document.getElementById('removePopup').style.display = 'none';
   render();
+}
+
+function confirmRemove() {
+  document.getElementById('removePopup').style.display = 'none';
+  window.location.href = 'index.html';
 }
 
 function removePatches() {
@@ -333,6 +411,16 @@ function triggerShopifyCheckout() {
   alert('Checkout loading, please try again in a moment.');
 }
 </script>
+
+<!-- Remove item popup -->
+<div id="removePopup" style="display:none;position:fixed;inset:0;background:rgba(44,26,34,0.6);z-index:9000;align-items:center;justify-content:center;">
+  <div style="background:#fff;max-width:480px;width:90%;padding:40px;text-align:center;">
+    <h2 style="font-family:'Cormorant Garamond',serif;font-size:28px;font-weight:300;color:#2C1A22;margin-bottom:12px;">Wait — before you go</h2>
+    <p style="font-size:14px;color:#2C1A22;opacity:0.65;margin-bottom:28px;line-height:1.7;">Would you like to try a different option instead?</p>
+    <div id="alternativeOptions" style="display:flex;flex-direction:column;gap:12px;margin-bottom:24px;"></div>
+    <button onclick="confirmRemove()" style="background:none;border:none;font-size:13px;color:#2C1A22;opacity:0.4;cursor:pointer;text-decoration:underline;">No thanks, remove item</button>
+  </div>
+</div>
 
 <!-- Hidden Shopify checkout buttons -->
 <div style="display:none;">
