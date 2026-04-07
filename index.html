@@ -620,6 +620,15 @@
       .why-section { padding: 60px 24px; }
     }
 
+    /* ─── SHOPIFY BUTTON WRAP ─── */
+    .shopify-btn-wrap {
+      width: 100%;
+      margin-top: 16px;
+    }
+    .shopify-btn-wrap iframe {
+      width: 100% !important;
+    }
+
     /* ─── SHOPIFY BUY BUTTON ─── */
     #product-component-1775507650016 iframe {
       width: 100% !important;
@@ -719,113 +728,26 @@
       font-size: 13px; font-weight: 500; color: var(--rose);
       margin-top: 10px; min-height: 18px;
     }
+
+    /* Move and style Shopify cart toggle */
+    .shopify-buy__cart-toggle {
+      bottom: auto !important;
+      top: 18px !important;
+      right: 20px !important;
+      left: auto !important;
+      background-color: #8B3A52 !important;
+      border-radius: 0px !important;
+      width: 44px !important;
+      height: 44px !important;
+      box-shadow: none !important;
+    }
+    .shopify-buy__cart-toggle__count {
+      font-family: 'DM Sans', sans-serif !important;
+      font-size: 12px !important;
+      font-weight: 700 !important;
+      color: #FFFFFF !important;
+    }
   </style>
-<script type="text/javascript">
-/*<![CDATA[*/
-(function () {
-  var scriptURL = 'https://sdks.shopifycdn.com/buy-button/latest/buy-button-storefront.min.js';
-  if (window.ShopifyBuy) {
-    if (window.ShopifyBuy.UI) {
-      ShopifyBuyInit();
-    } else {
-      loadScript();
-    }
-  } else {
-    loadScript();
-  }
-  function loadScript() {
-    var script = document.createElement('script');
-    script.async = true;
-    script.src = scriptURL;
-    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(script);
-    script.onload = ShopifyBuyInit;
-  }
-  function ShopifyBuyInit() {
-    var client = ShopifyBuy.buildClient({
-      domain: 'mbze2f-ir.myshopify.com',
-      storefrontAccessToken: '0d356de62d638aab4590ae0b4758b8c8',
-    });
-    ShopifyBuy.UI.onReady(client).then(function (ui) {
-      ui.createComponent('product', {
-        id: '7873289945153',
-        node: document.getElementById('product-component-1775507650016'),
-        moneyFormat: '%24%7B%7Bamount%7D%7D',
-        options: {
-  "product": {
-    "contents": {
-      "img": false,
-      "title": false,
-      "price": false,
-      "description": false,
-      "button": true,
-      "quantity": false
-    },
-    "styles": {
-      "product": {
-        "@media (min-width: 601px)": {
-          "max-width": "100%",
-          "margin-left": "0px",
-          "margin-bottom": "0px"
-        }
-      },
-      "button": {
-        "background-color": "#8b3a52",
-        "width": "100%",
-        "padding-top": "18px",
-        "padding-bottom": "18px",
-        "font-size": "15px",
-        "font-weight": "700",
-        "letter-spacing": "0.05em",
-        "border-radius": "0px",
-        ":hover": {
-          "background-color": "#7d344a"
-        },
-        ":focus": {
-          "background-color": "#7d344a"
-        }
-      }
-    },
-    "text": {
-      "button": "Add to Cart — $54.99"
-    }
-  },
-  "cart": {
-    "styles": {
-      "button": {
-        "background-color": "#8b3a52",
-        ":hover": {
-          "background-color": "#7d344a"
-        },
-        ":focus": {
-          "background-color": "#7d344a"
-        }
-      }
-    },
-    "text": {
-      "total": "Subtotal",
-      "button": "Checkout"
-    }
-  },
-  "toggle": {
-    "styles": {
-      "toggle": {
-        "background-color": "#8b3a52",
-        ":hover": {
-          "background-color": "#7d344a"
-        },
-        ":focus": {
-          "background-color": "#7d344a"
-        }
-      }
-    }
-  }
-},
-      });
-    });
-  }
-})();
-/*]]>*/
-</script>
 </head>
 <body>
 
@@ -854,16 +776,9 @@
     <a href="#how-it-works" class="nav-link">How It Works</a>
     <a href="#reviews" class="nav-link">Reviews</a>
     <a href="#faq" class="nav-link">FAQ</a>
-    <div class="cart-wrapper">
-      <a href="cart.html" class="cart-btn" id="cartBtn" aria-label="View cart" onclick="encodeCartInUrl(event)">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/>
-          <line x1="3" y1="6" x2="21" y2="6"/>
-          <path d="M16 10a4 4 0 01-8 0"/>
-        </svg>
-        <span class="cart-count" id="cartCount">0</span>
-      </a>
-    </div>
+    <a href="cart.html" class="cart-btn" aria-label="View Cart">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>
+    </a>
   </nav>
   <button class="nav-toggle" id="navToggle" aria-label="Open menu">
     <span></span><span></span><span></span>
@@ -1015,7 +930,9 @@
       <span class="stock-dot"></span>
       Only 47 left in stock — order soon
     </div>
-    <div id="product-component-1775507650016"></div>
+    <div class="shopify-btn-wrap">
+      <button class="btn add-to-cart-btn" id="addToCartBtn" style="width:100%;padding:18px;font-size:15px;font-weight:700;letter-spacing:0.05em;">Add to Cart — $54.99</button>
+    </div>
     <div class="guarantee-row">
       <div class="guarantee-item"><span class="g-icon">🚚</span><span>Free Shipping<br/>over $60</span></div>
       <div class="guarantee-item"><span class="g-icon">↩</span><span>30-Day<br/>Guarantee</span></div>
@@ -1224,7 +1141,7 @@
       <p>Premium cordless period relief, designed for real life. CE · ROHS · FCC · UKCA certified for your safety.</p>
       <span class="footer-slogan">"Relief that moves with you."</span>
     </div>
-    <div class="footer-col"><h4>Shop</h4><ul><li><a href="#product">Heat Belt — $54.99</a></li><li><a href="#product">Heat Patches — $12.99</a></li><li><a href="cart.html">View Cart</a></li></ul></div>
+    <div class="footer-col"><h4>Shop</h4><ul><li><a href="#product">Heat Belt — $54.99</a></li><li><a href="#product">Heat Patches — $12.99</a></li></ul></div>
     <div class="footer-col"><h4>Support</h4><ul><li><a href="#faq">FAQ</a></li><li><a href="#">Shipping Info</a></li><li><a href="#">Returns Policy</a></li><li><a href="#">Contact Us</a></li></ul></div>
     <div class="footer-col"><h4>Company</h4><ul><li><a href="#story">Our Story</a></li><li><a href="#">Privacy Policy</a></li><li><a href="#">Terms of Service</a></li></ul></div>
   </div>
@@ -1278,275 +1195,227 @@
 
 <!-- ─── TOAST ─── -->
 <div class="cart-toast" id="cartToast">
-  ✓ Added to cart &nbsp;<a onclick="window.location.href='cart.html'">View Cart →</a>
+  ✓ Added to cart
 </div>
 
 <script>
-  // ─── CART (in-memory only — no localStorage, no sessionStorage) ───
-  const FREE_SHIPPING = 60;
-  const BELT_PRICE = 54.99;
-  const PATCH_PRICE = 12.99;
-
-  // Single in-memory object — survives JS interactions, resets on page reload
-  let cartData = { belt: 0, patches: 0 };
-
-  function cartTotal() {
-    return (cartData.belt * BELT_PRICE) + (cartData.patches * PATCH_PRICE);
+// ─── BUNDLE + CART SYSTEM ───
+const PRODUCTS = {
+  belt1: {
+    name: 'Menstrela™ Heat Belt — 1 Pack',
+    price: 54.99,
+    checkoutUrl: 'https://mbze2f-ir.myshopify.com/cart/43746042839105:1?channel=buy_button',
+    img: 'product-hero2.png'
+  },
+  belt2: {
+    name: 'Menstrela™ Heat Belt — 2 Pack',
+    price: 94.99,
+    checkoutUrl: 'https://mbze2f-ir.myshopify.com/cart/43746397257793:1?channel=buy_button',
+    img: 'product-hero2.png'
+  },
+  belt3: {
+    name: 'Menstrela™ Heat Belt — 3 Pack',
+    price: 134.99,
+    checkoutUrl: 'https://mbze2f-ir.myshopify.com/cart/43746401419329:1?channel=buy_button',
+    img: 'product-hero2.png'
+  },
+  patches: {
+    name: 'Menstrela™ Heat Patches (10-pack)',
+    price: 12.99,
+    img: 'menstrela-heat-belt-cart.png'
   }
+};
 
-  function cartItemCount() {
-    return cartData.belt + cartData.patches;
-  }
+let selectedBundle = 'belt1';
+let hasPatches = false;
 
-  function syncCartBadge() {
-    const n = cartItemCount();
-    const el = document.getElementById('cartCount');
-    if (!el) return;
-    el.textContent = n;
-    el.classList.toggle('visible', n > 0);
-  }
-
-  // ─── STICKY HEADER ───
-  window.addEventListener('scroll', () => {
-    document.getElementById('mainHeader').classList.toggle('scrolled', window.scrollY > 10);
-  }, { passive: true });
-
-  // ─── MOBILE NAV ───
-  document.getElementById('navToggle').addEventListener('click', () => {
-    document.getElementById('mainNav').classList.toggle('open');
+// Bundle selector
+function initBundles() {
+  const btns = document.querySelectorAll('.bundle-btn');
+  btns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      btns.forEach(b => b.classList.remove('bundle-active'));
+      btn.classList.add('bundle-active');
+      const qty = parseInt(btn.dataset.qty);
+      if (qty === 1) selectedBundle = 'belt1';
+      if (qty === 2) selectedBundle = 'belt2';
+      if (qty === 3) selectedBundle = 'belt3';
+      const price = parseFloat(btn.dataset.price);
+      const msg = btn.dataset.msg || '';
+      const msgEl = document.getElementById('bundleFriendMsg');
+      if (msgEl) msgEl.textContent = msg;
+      document.getElementById('addToCartBtn').textContent = 'Add to Cart — $' + price.toFixed(2);
+    });
   });
-  document.querySelectorAll('#mainNav .nav-link').forEach(a => {
-    a.addEventListener('click', () => document.getElementById('mainNav').classList.remove('open'));
-  });
+  if (btns.length > 0) {
+    btns[0].classList.add('bundle-active');
+  }
+}
+initBundles();
 
-  // ─── STICKY MOBILE CTA ───
-  const stickyBtn = document.getElementById('stickyMobileCta');
-  const heroEl = document.getElementById('hero');
+// Add to cart
+document.getElementById('addToCartBtn').addEventListener('click', () => {
+  const product = PRODUCTS[selectedBundle];
+  const cartData = {
+    bundle: selectedBundle,
+    beltName: product.name,
+    beltPrice: product.price,
+    beltImg: product.img,
+    checkoutUrl: product.checkoutUrl,
+    patches: hasPatches,
+    patchPrice: PRODUCTS.patches.price
+  };
+  const encoded = encodeURIComponent(JSON.stringify(cartData));
+  window.location.href = 'cart.html?data=' + encoded;
+});
+
+// Sticky header
+window.addEventListener('scroll', () => {
+  document.getElementById('mainHeader').classList.toggle('scrolled', window.scrollY > 10);
+}, { passive: true });
+
+// Mobile nav
+document.getElementById('navToggle').addEventListener('click', () => {
+  document.getElementById('mainNav').classList.toggle('open');
+});
+
+// Sticky mobile CTA
+const stickyBtn = document.getElementById('stickyMobileCta');
+const heroEl = document.getElementById('hero');
+if (stickyBtn && heroEl) {
   new IntersectionObserver(entries => {
     entries.forEach(e => stickyBtn.classList.toggle('visible', !e.isIntersecting));
   }, { threshold: 0 }).observe(heroEl);
+}
 
-  // ─── SCROLL ANIMATIONS ───
-  const fadeObs = new IntersectionObserver(entries => {
-    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
-  }, { threshold: 0.08, rootMargin: '0px 0px -40px 0px' });
-  document.querySelectorAll('.fade-in').forEach(el => fadeObs.observe(el));
+// Scroll animations
+const fadeObs = new IntersectionObserver(entries => {
+  entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+}, { threshold: 0.08, rootMargin: '0px 0px -40px 0px' });
+document.querySelectorAll('.fade-in').forEach(el => fadeObs.observe(el));
 
-  // ─── STAT COUNTER ───
-  let counted = false;
-  const statsObs = new IntersectionObserver(entries => {
-    entries.forEach(e => {
-      if (e.isIntersecting && !counted) {
-        counted = true;
-        document.querySelectorAll('.stat-number[data-target]').forEach(el => {
-          const target = parseInt(el.dataset.target);
-          let cur = 0;
-          const t = setInterval(() => {
-            cur = Math.min(cur + target / 90, target);
-            el.textContent = Math.floor(cur) + '%';
-            if (cur >= target) clearInterval(t);
-          }, 18);
-        });
-      }
-    });
-  }, { threshold: 0.3 });
-  const statsSection = document.querySelector('.stats-section');
-  if (statsSection) statsObs.observe(statsSection);
-
-  // ─── FAQ ───
-  function toggleFaq(id) {
-    const item = document.getElementById(id);
-    const answer = item.querySelector('.faq-answer');
-    const isOpen = item.classList.contains('open');
-    document.querySelectorAll('.faq-item.open').forEach(o => { o.classList.remove('open'); o.querySelector('.faq-answer').style.maxHeight = '0'; });
-    if (!isOpen) { item.classList.add('open'); answer.style.maxHeight = answer.scrollHeight + 40 + 'px'; }
-  }
-
-  // ─── SPECS ACCORDION ───
-  function toggleSpecs() {
-    document.getElementById('specsAccordion').classList.toggle('open');
-  }
-
-  // ─── LIGHTBOX ───
-  const lightboxImages = ['product-hero2.png', 'product-detail2.png', 'lifestyle-before2.png'];
-  const lightboxAlts = ['Menstrela™ Cordless Heat Belt', 'Belt Detail', 'Lifestyle'];
-  let currentLightboxIndex = 0;
-
-  function openLightbox(index) {
-    currentLightboxIndex = index;
-    showLightboxImage();
-    document.getElementById('lightboxOverlay').classList.add('open');
-    document.body.style.overflow = 'hidden';
-  }
-
-  function closeLightbox() {
-    document.getElementById('lightboxOverlay').classList.remove('open');
-    document.body.style.overflow = '';
-  }
-
-  function showLightboxImage() {
-    const img = document.getElementById('lightboxImg');
-    img.src = lightboxImages[currentLightboxIndex];
-    img.alt = lightboxAlts[currentLightboxIndex];
-    document.getElementById('lightboxCounter').textContent = (currentLightboxIndex + 1) + ' / ' + lightboxImages.length;
-  }
-
-  function lightboxNav(dir) {
-    currentLightboxIndex = (currentLightboxIndex + dir + lightboxImages.length) % lightboxImages.length;
-    showLightboxImage();
-  }
-
-  function lightboxClickOutside(e) {
-    if (e.target === document.getElementById('lightboxOverlay')) closeLightbox();
-  }
-
-  document.addEventListener('keydown', e => {
-    if (!document.getElementById('lightboxOverlay').classList.contains('open')) return;
-    if (e.key === 'Escape') closeLightbox();
-    if (e.key === 'ArrowLeft') lightboxNav(-1);
-    if (e.key === 'ArrowRight') lightboxNav(1);
-  });
-
-  // ─── SIZE GUIDE MODAL ───
-  function openSizeGuide() {
-    document.getElementById('sizeGuideModal').classList.add('open');
-    document.body.style.overflow = 'hidden';
-  }
-
-  function closeSizeGuide() {
-    document.getElementById('sizeGuideModal').classList.remove('open');
-    document.body.style.overflow = '';
-  }
-
-  function modalClickOutside(e) {
-    if (e.target === document.getElementById('sizeGuideModal')) closeSizeGuide();
-  }
-
-  // ─── BUNDLE SELECTOR ───
-  let selectedPrice = 54.99;
-
-  function initBundles() {
-    const btns = document.querySelectorAll('.bundle-btn');
-    btns.forEach(btn => {
-      btn.addEventListener('click', () => {
-        btns.forEach(b => b.classList.remove('bundle-active'));
-        btn.classList.add('bundle-active');
-        selectedPrice = parseFloat(btn.dataset.price);
-        const msg = btn.dataset.msg || '';
-        const msgEl = document.getElementById('bundleFriendMsg');
-        if (msgEl) msgEl.textContent = msg;
-        updateCartBtn();
+// Stat counter
+let counted = false;
+const statsObs = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting && !counted) {
+      counted = true;
+      document.querySelectorAll('.stat-number[data-target]').forEach(el => {
+        const target = parseInt(el.dataset.target);
+        let cur = 0;
+        const t = setInterval(() => {
+          cur = Math.min(cur + target / 90, target);
+          el.textContent = Math.floor(cur) + '%';
+          if (cur >= target) clearInterval(t);
+        }, 18);
       });
-    });
-    // Default: select 1 belt
-    if (btns.length > 0) {
-      btns[0].classList.add('bundle-active');
-      selectedPrice = 54.99;
     }
-    updateCartBtn();
-  }
-
-  function updateCartBtn() {
-    const btn = document.getElementById('addToCartBtn');
-    if (btn) btn.textContent = 'Add to Cart — $' + selectedPrice.toFixed(2);
-  }
-
-  initBundles();
-
-  document.getElementById('addToCartBtn').addEventListener('click', () => {
-    cartData.belt = document.querySelector('.bundle-btn.bundle-active') ?
-      parseInt(document.querySelector('.bundle-btn.bundle-active').dataset.qty) : 1;
-    cartData.patches = 0;
-    syncCartBadge();
-    document.getElementById('addToCartBtn').textContent = '✓ Added!';
-    document.getElementById('addToCartBtn').style.background = '#4a7c59';
-    showToast();
-    setTimeout(() => {
-      document.getElementById('addToCartBtn').style.background = '';
-      updateCartBtn();
-    }, 2200);
   });
+}, { threshold: 0.3 });
+const statsSection = document.querySelector('.stats-section');
+if (statsSection) statsObs.observe(statsSection);
 
-  // Build URL with cart state so cart.html can read it in memory
-  function encodeCartInUrl(e) {
-    if (cartItemCount() === 0) return; // let natural href work
-    e.preventDefault();
-    const params = new URLSearchParams();
-    if (cartData.belt > 0) params.set('belt', cartData.belt);
-    if (cartData.patches > 0) params.set('patches', cartData.patches);
-    window.location.href = 'cart.html?' + params.toString();
-  }
-
-  function showToast() {
-    const toast = document.getElementById('cartToast');
-    // Update toast link to carry cart state
-    const link = toast.querySelector('a');
-    if (link) {
-      link.onclick = (e) => { e.preventDefault(); encodeCartInUrl({ preventDefault: () => {}, currentTarget: null }); window.location.href = buildCartUrl(); };
-    }
-    toast.classList.add('show');
-    setTimeout(() => toast.classList.remove('show'), 3500);
-  }
-
-  function buildCartUrl() {
-    const params = new URLSearchParams();
-    if (cartData.belt > 0) params.set('belt', cartData.belt);
-    if (cartData.patches > 0) params.set('patches', cartData.patches);
-    const qs = params.toString();
-    return 'cart.html' + (qs ? '?' + qs : '');
-  }
-
-  // ─── SMOOTH SCROLL ───
-  document.querySelectorAll('a[href^="#"]').forEach(a => {
-    a.addEventListener('click', e => {
-      const target = document.querySelector(a.getAttribute('href'));
-      if (target) {
-        e.preventDefault();
-        window.scrollTo({ top: target.getBoundingClientRect().top + window.scrollY - 76, behavior: 'smooth' });
-      }
-    });
+// FAQ
+function toggleFaq(id) {
+  const item = document.getElementById(id);
+  const answer = item.querySelector('.faq-answer');
+  const isOpen = item.classList.contains('open');
+  document.querySelectorAll('.faq-item.open').forEach(o => {
+    o.classList.remove('open');
+    o.querySelector('.faq-answer').style.maxHeight = '0';
   });
-
-  // ─── INIT ───
-  syncCartBadge(); // badge starts at 0; updates when items are added
-
-  // ─── REVIEW CAROUSEL ───
-  let revIndex = 0;
-  function visibleRevs() { return window.innerWidth <= 768 ? 1 : 3; }
-  function getRevCards() { return document.querySelectorAll('.reviews-carousel .review-card'); }
-  function maxRevIndex() { return getRevCards().length - visibleRevs(); }
-
-  function buildRevDots() {
-    const dotsEl = document.getElementById('revDots');
-    if (!dotsEl) return;
-    dotsEl.innerHTML = '';
-    for (let i = 0; i <= maxRevIndex(); i++) {
-      const d = document.createElement('button');
-      d.className = 'rev-dot' + (i === 0 ? ' active' : '');
-      d.setAttribute('aria-label', 'Review page ' + (i + 1));
-      d.onclick = () => goToRev(i);
-      dotsEl.appendChild(d);
-    }
+  if (!isOpen) {
+    item.classList.add('open');
+    answer.style.maxHeight = answer.scrollHeight + 40 + 'px';
   }
+}
 
-  function goToRev(index) {
-    revIndex = Math.max(0, Math.min(index, maxRevIndex()));
-    const cards = getRevCards();
-    const vis = visibleRevs();
-    cards.forEach((card, i) => {
-      card.style.display = (i >= revIndex && i < revIndex + vis) ? 'flex' : 'none';
-      card.style.flexDirection = 'column';
-    });
-    document.querySelectorAll('.rev-dot').forEach((d, i) => {
-      d.classList.toggle('active', i === revIndex);
-    });
+// Specs accordion
+function toggleSpecs() {
+  document.getElementById('specsAccordion').classList.toggle('open');
+}
+
+// Lightbox
+const lightboxImages = ['product-hero2.png', 'product-detail2.png', 'lifestyle-before2.png'];
+const lightboxAlts = ['Menstrela™ Cordless Heat Belt', 'Belt Detail', 'Lifestyle'];
+let currentLightboxIndex = 0;
+function openLightbox(index) {
+  currentLightboxIndex = index;
+  showLightboxImage();
+  document.getElementById('lightboxOverlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+function closeLightbox() {
+  document.getElementById('lightboxOverlay').classList.remove('open');
+  document.body.style.overflow = '';
+}
+function showLightboxImage() {
+  const img = document.getElementById('lightboxImg');
+  img.src = lightboxImages[currentLightboxIndex];
+  img.alt = lightboxAlts[currentLightboxIndex];
+  document.getElementById('lightboxCounter').textContent = (currentLightboxIndex + 1) + ' / ' + lightboxImages.length;
+}
+function lightboxNav(dir) {
+  currentLightboxIndex = (currentLightboxIndex + dir + lightboxImages.length) % lightboxImages.length;
+  showLightboxImage();
+}
+function lightboxClickOutside(e) {
+  if (e.target === document.getElementById('lightboxOverlay')) closeLightbox();
+}
+document.addEventListener('keydown', e => {
+  if (!document.getElementById('lightboxOverlay').classList.contains('open')) return;
+  if (e.key === 'Escape') closeLightbox();
+  if (e.key === 'ArrowLeft') lightboxNav(-1);
+  if (e.key === 'ArrowRight') lightboxNav(1);
+});
+
+// Size guide
+function openSizeGuide() {
+  document.getElementById('sizeGuideModal').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+function closeSizeGuide() {
+  document.getElementById('sizeGuideModal').classList.remove('open');
+  document.body.style.overflow = '';
+}
+function modalClickOutside(e) {
+  if (e.target === document.getElementById('sizeGuideModal')) closeSizeGuide();
+}
+
+// Review carousel
+let revIndex = 0;
+function visibleRevs() { return window.innerWidth <= 768 ? 1 : 3; }
+function getRevCards() { return document.querySelectorAll('.reviews-carousel .review-card'); }
+function maxRevIndex() { return Math.max(0, getRevCards().length - visibleRevs()); }
+function buildRevDots() {
+  const dotsEl = document.getElementById('revDots');
+  if (!dotsEl) return;
+  dotsEl.innerHTML = '';
+  for (let i = 0; i <= maxRevIndex(); i++) {
+    const d = document.createElement('button');
+    d.className = 'rev-dot' + (i === 0 ? ' active' : '');
+    d.setAttribute('aria-label', 'Review page ' + (i+1));
+    d.onclick = () => goToRev(i);
+    dotsEl.appendChild(d);
   }
-
-  function slideReviews(dir) { goToRev(revIndex + dir); }
-
-  buildRevDots();
-  goToRev(0);
-  window.addEventListener('resize', () => { buildRevDots(); goToRev(0); });
+}
+function goToRev(index) {
+  revIndex = Math.max(0, Math.min(index, maxRevIndex()));
+  const cards = getRevCards();
+  const vis = visibleRevs();
+  cards.forEach((card, i) => {
+    card.style.display = (i >= revIndex && i < revIndex + vis) ? 'flex' : 'none';
+    card.style.flexDirection = 'column';
+  });
+  document.querySelectorAll('.rev-dot').forEach((d, i) => {
+    d.classList.toggle('active', i === revIndex);
+  });
+}
+function slideReviews(dir) { goToRev(revIndex + dir); }
+buildRevDots();
+goToRev(0);
+window.addEventListener('resize', () => { buildRevDots(); goToRev(0); });
 </script>
+
 </body>
 </html>
