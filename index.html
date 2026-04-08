@@ -748,6 +748,21 @@
       font-weight: 700 !important;
       color: #FFFFFF !important;
     }
+  @keyframes welcomeDot {
+    0%, 100% { opacity: 0.2; transform: scale(0.8); }
+    50% { opacity: 1; transform: scale(1.2); }
+  }
+  .welcome-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: #8B3A52;
+    animation: welcomeDot 1.2s ease-in-out infinite;
+  }
+  body.welcome-active {
+    overflow: hidden;
+  }
+
   /* MOBILE IMAGE CAROUSEL */
   .mobile-img-nav {
     display: none;
@@ -783,6 +798,56 @@
   </style>
 </head>
 <body>
+
+<!-- WELCOME SCREEN -->
+<div id="welcomeScreen" style="
+  position: fixed;
+  inset: 0;
+  z-index: 99999;
+  background: #2C1A22;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  transition: opacity 0.8s ease;
+">
+  <div id="welcomeContent" style="
+    text-align: center;
+    opacity: 0;
+    transform: translateY(16px);
+    transition: opacity 0.9s ease, transform 0.9s ease;
+  ">
+    <div style="
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(36px, 8vw, 64px);
+      font-weight: 300;
+      color: #F5EDE8;
+      letter-spacing: 0.08em;
+      margin-bottom: 16px;
+    ">Menstrela<sup style="font-size:0.4em;vertical-align:super;">™</sup></div>
+    <div style="
+      font-family: 'DM Sans', sans-serif;
+      font-size: clamp(12px, 3vw, 15px);
+      font-weight: 400;
+      color: #E8C4C4;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      opacity: 0.8;
+    ">Relief that moves with you.</div>
+    <div style="
+      margin-top: 40px;
+      display: flex;
+      gap: 8px;
+      justify-content: center;
+      align-items: center;
+    ">
+      <div class="welcome-dot"></div>
+      <div class="welcome-dot" style="animation-delay:0.2s"></div>
+      <div class="welcome-dot" style="animation-delay:0.4s"></div>
+    </div>
+  </div>
+</div>
 
 <!-- ─── ANNOUNCEMENT BAR ─── -->
 <div class="announcement-bar" aria-label="Promotions">
@@ -1483,6 +1548,28 @@ function mobileImgNav(dir) {
 if (document.getElementById('mainProductImgEl')) {
   document.getElementById('mainProductImgEl').style.transition = 'opacity 0.15s ease';
 }
+
+// ─── WELCOME SCREEN ───
+(function() {
+  const screen = document.getElementById('welcomeScreen');
+  const content = document.getElementById('welcomeContent');
+  if (!screen) return;
+  document.body.classList.add('welcome-active');
+  // Fade in content after 100ms
+  setTimeout(() => {
+    content.style.opacity = '1';
+    content.style.transform = 'translateY(0)';
+  }, 100);
+  // Start fade out after 2.5 seconds
+  setTimeout(() => {
+    screen.style.opacity = '0';
+    document.body.classList.remove('welcome-active');
+  }, 2500);
+  // Remove from DOM after fade completes
+  setTimeout(() => {
+    screen.remove();
+  }, 3300);
+})();
 </script>
 
 </body>
