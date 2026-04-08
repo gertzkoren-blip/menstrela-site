@@ -489,9 +489,10 @@
 
       /* ── Product section ── */
       .product-section { grid-template-columns: 1fr; gap: 24px !important; padding: 40px 20px !important; }
-      .product-images { display: flex; flex-direction: column; grid-template-columns: 1fr !important; gap: 8px; }
-      .img-main { aspect-ratio: 4/3; width: 100%; }
-      .img-thumb { aspect-ratio: 4/3; width: 100%; }
+      .product-images { display: block !important; position: relative; width: 100%; }
+      .img-main { display: block !important; width: 100%; aspect-ratio: 4/3; grid-column: unset; }
+      .img-thumb { display: none !important; }
+      .mobile-img-nav { display: flex !important; }
 
       /* ── Comparison ── */
       .comparison-section { padding: 48px 20px !important; }
@@ -747,6 +748,38 @@
       font-weight: 700 !important;
       color: #FFFFFF !important;
     }
+  /* MOBILE IMAGE CAROUSEL */
+  .mobile-img-nav {
+    display: none;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    padding: 12px 0;
+    background: var(--white);
+  }
+  .mobile-img-prev, .mobile-img-next {
+    background: var(--white);
+    border: 1.5px solid var(--blush);
+    color: var(--plum);
+    width: 36px; height: 36px;
+    border-radius: 50%;
+    font-size: 20px;
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    transition: background 0.2s, color 0.2s;
+  }
+  .mobile-img-prev:hover, .mobile-img-next:hover { background: var(--rose); color: var(--white); border-color: var(--rose); }
+  .mobile-img-dots { display: flex; gap: 6px; align-items: center; }
+  .mobile-img-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--blush); transition: background 0.2s; }
+  .mobile-img-dot.active { background: var(--rose); }
+  @media (max-width: 768px) {
+    .mobile-img-nav { display: flex !important; }
+    .img-thumb { display: none !important; }
+    .img-main { grid-column: unset; aspect-ratio: 4/3; }
+    .comparison-table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; margin: 0 -20px; padding: 0 20px; }
+    .comparison-table { min-width: 340px; font-size: 13px; }
+    .comparison-table th, .comparison-table td { padding: 10px 12px; }
+  }
   </style>
 </head>
 <body>
@@ -834,14 +867,23 @@
 <!-- ─── PRODUCT SECTION ─── -->
 <section class="product-section" id="product">
   <div class="product-images fade-in">
-    <div class="img-main" onclick="openLightbox(0)" title="Click to enlarge">
-      <img src="product-hero2.png" alt="Menstrela™ Cordless Heat Belt" loading="eager" />
+    <div class="img-main" id="mainProductImg" onclick="openLightbox(currentProductImg)" title="Click to enlarge">
+      <img src="product-hero2.png" alt="Menstrela™ Cordless Heat Belt" loading="eager" id="mainProductImgEl" />
     </div>
     <div class="img-thumb" onclick="openLightbox(1)" title="Click to enlarge">
       <img src="product-detail2.png" alt="Menstrela™ Belt Detail" loading="eager" />
     </div>
     <div class="img-thumb" onclick="openLightbox(2)" title="Click to enlarge">
       <img src="lifestyle-before2.png" alt="Menstrela™ Lifestyle" loading="eager" />
+    </div>
+    <div class="mobile-img-nav" style="display:none;">
+      <button class="mobile-img-prev" onclick="mobileImgNav(-1)">‹</button>
+      <div class="mobile-img-dots" id="mobileImgDots">
+        <span class="mobile-img-dot active"></span>
+        <span class="mobile-img-dot"></span>
+        <span class="mobile-img-dot"></span>
+      </div>
+      <button class="mobile-img-next" onclick="mobileImgNav(1)">›</button>
     </div>
   </div>
 
@@ -1152,7 +1194,7 @@
 </footer>
 
 <!-- ─── STICKY MOBILE CTA ─── -->
-<div class="sticky-mobile-cta" id="stickyMobileCta">
+<div class="sticky-mobile-cta" id="stickyMobileCta" style="display:none !important;">
   <a href="#product" class="btn">Find Your Relief</a>
 </div>
 
@@ -1415,6 +1457,32 @@ function slideReviews(dir) { goToRev(revIndex + dir); }
 buildRevDots();
 goToRev(0);
 window.addEventListener('resize', () => { buildRevDots(); goToRev(0); });
+
+// Mobile image carousel
+const mobileImgs = [
+  { src: 'product-hero2.png', alt: 'Menstrela™ Cordless Heat Belt' },
+  { src: 'product-detail2.png', alt: 'Belt Detail' },
+  { src: 'lifestyle-before2.png', alt: 'Lifestyle' }
+];
+let currentProductImg = 0;
+function mobileImgNav(dir) {
+  currentProductImg = (currentProductImg + dir + mobileImgs.length) % mobileImgs.length;
+  const imgEl = document.getElementById('mainProductImgEl');
+  if (imgEl) {
+    imgEl.style.opacity = '0';
+    setTimeout(() => {
+      imgEl.src = mobileImgs[currentProductImg].src;
+      imgEl.alt = mobileImgs[currentProductImg].alt;
+      imgEl.style.opacity = '1';
+    }, 150);
+  }
+  document.querySelectorAll('.mobile-img-dot').forEach((d, i) => {
+    d.classList.toggle('active', i === currentProductImg);
+  });
+}
+if (document.getElementById('mainProductImgEl')) {
+  document.getElementById('mainProductImgEl').style.transition = 'opacity 0.15s ease';
+}
 </script>
 
 </body>
