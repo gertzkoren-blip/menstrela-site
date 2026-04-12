@@ -322,6 +322,13 @@ let appliedDiscount = null;
 
 let cartData = null;
 let hasPatches = false;
+let popupSelectedColor = 'white';
+
+function setPopupColor(color) {
+  popupSelectedColor = color;
+  document.getElementById('popupColorWhite').style.borderColor = color === 'white' ? '#8B3A52' : 'transparent';
+  document.getElementById('popupColorPink').style.borderColor = color === 'pink' ? '#8B3A52' : 'transparent';
+}
 
 try {
   const params = new URLSearchParams(window.location.search);
@@ -339,6 +346,9 @@ try {
     cartData.beltImg = isWhite ? 'menstrela-heat-belt-cart.png' : 'menstrela-heat-belt-cart-pink.png';
     if (!isWhite) {
       cartData.checkoutUrl = pinkCheckoutUrls[bundleKey] || pinkCheckoutUrls['belt1'];
+    }
+    if (cartData.beltName && !cartData.beltName.toLowerCase().includes('white') && !cartData.beltName.toLowerCase().includes('pink')) {
+      cartData.beltName += isWhite ? ' (White)' : ' (Pink)';
     }
   }
 } catch(e) {}
@@ -416,7 +426,7 @@ function render() {
   const container = document.getElementById('cartItemsContainer');
   container.innerHTML = `
     <div class="cart-item">
-     <div class="cart-item-img"><img src="${cartData.beltName && cartData.beltName.toLowerCase().includes('pink') ? 'menstrela-heat-belt-cart-pink.png' : 'menstrela-heat-belt-cart.png'}" alt="${cartData.beltName}" /></div>
+      <div class="cart-item-img"><img src="${cartData.beltName && cartData.beltName.toLowerCase().includes('pink') ? 'menstrela-heat-belt-cart-pink.png' : 'menstrela-heat-belt-cart.png'}" alt="${cartData.beltName}" /></div>
       <div>
         <div class="cart-item-name">${cartData.beltName}</div>
         <div class="cart-item-meta">Built-in battery · Truly cordless</div>
@@ -481,11 +491,13 @@ const ALTERNATIVES = {
 function showRemovePopup() {
   const popup = document.getElementById('removePopup');
   popup.style.display = 'flex';
+  popupSelectedColor = cartData && cartData.beltName && cartData.beltName.toLowerCase().includes('pink') ? 'pink' : 'white';
+  setPopupColor(popupSelectedColor);
   const bundle = cartData ? cartData.bundle : 'belt1';
   const alts = ALTERNATIVES[bundle] || ALTERNATIVES['belt1'];
   const container = document.getElementById('alternativeOptions');
   container.innerHTML = alts.map(alt => `
-    <button class="alt-option-btn" onclick="switchBundle('${alt.key}')">
+    <button class="alt-option-btn" onclick="switchBundleWithColor('${alt.key}')">
       <div style="text-align:left;">
         <div class="alt-option-name">${alt.name}</div>
         <div style="font-size:11px;color:#8B3A52;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;margin-top:3px;">${alt.tag}</div>
@@ -518,6 +530,33 @@ function switchBundle(bundleKey) {
   render();
 }
 
+function switchBundleWithColor(bundleKey) {
+  const color = popupSelectedColor;
+  const isWhite = color !== 'pink';
+  const WHITE_URLS = {
+    belt1: 'https://mbze2f-ir.myshopify.com/cart/43746042839105:1?channel=buy_button',
+    belt2: 'https://mbze2f-ir.myshopify.com/cart/43746397257793:1?channel=buy_button',
+    belt3: 'https://mbze2f-ir.myshopify.com/cart/43746401419329:1?channel=buy_button'
+  };
+  const PINK_URLS = {
+    belt1: 'https://mbze2f-ir.myshopify.com/cart/43764058751041:1?channel=buy_button',
+    belt2: 'https://mbze2f-ir.myshopify.com/cart/43764066385985:1?channel=buy_button',
+    belt3: 'https://mbze2f-ir.myshopify.com/cart/43764066353217:1?channel=buy_button'
+  };
+  const NAMES = { belt1: '1 Pack', belt2: '2 Pack', belt3: '3 Pack' };
+  const PRICES = { belt1: 54.99, belt2: 94.99, belt3: 134.99 };
+  cartData = {
+    bundle: bundleKey,
+    beltName: `Menstrela™ Heat Belt — ${NAMES[bundleKey]} (${isWhite ? 'White' : 'Pink'})`,
+    beltPrice: PRICES[bundleKey],
+    beltImg: isWhite ? 'menstrela-heat-belt-cart.png' : 'menstrela-heat-belt-cart-pink.png',
+    checkoutUrl: isWhite ? WHITE_URLS[bundleKey] : PINK_URLS[bundleKey]
+  };
+  hasPatches = false;
+  document.getElementById('removePopup').style.display = 'none';
+  render();
+}
+
 function confirmRemove() {
   document.getElementById('removePopup').style.display = 'none';
   window.location.href = 'index.html';
@@ -542,6 +581,10 @@ function triggerShopifyCheckout() {
   <div style="background:#fff;max-width:480px;width:90%;padding:40px;text-align:center;">
     <h2 style="font-family:'Cormorant Garamond',serif;font-size:28px;font-weight:300;color:#2C1A22;margin-bottom:12px;">Wait — before you go</h2>
     <p style="font-size:14px;color:#2C1A22;opacity:0.65;margin-bottom:28px;line-height:1.7;">Would you like to try a different option instead?</p>
+    <div style="display:flex;gap:12px;justify-content:center;margin-bottom:16px;">
+  <button id="popupColorWhite" onclick="setPopupColor('white')" style="padding:8px 20px;border:2px solid #8B3A52;background:#F5EDE8;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:600;cursor:pointer;color:#2C1A22;">White</button>
+  <button id="popupColorPink" onclick="setPopupColor('pink')" style="padding:8px 20px;border:2px solid transparent;background:#F4A7B9;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:600;cursor:pointer;color:#2C1A22;">Pink</button>
+</div>
     <div id="alternativeOptions" style="display:flex;flex-direction:column;gap:12px;margin-bottom:24px;"></div>
     <button onclick="confirmRemove()" style="background:none;border:none;font-size:13px;color:#2C1A22;opacity:0.4;cursor:pointer;text-decoration:underline;">No thanks, remove item</button>
   </div>
