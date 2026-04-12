@@ -572,6 +572,8 @@ render();
 function triggerShopifyCheckout() {
   if (cartData && cartData.checkoutUrl) {
     window.location.href = cartData.checkoutUrl;
+  } else {
+    alert('Debug: ' + JSON.stringify(cartData));
   }
 }
 </script>
