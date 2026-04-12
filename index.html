@@ -795,6 +795,40 @@
     .comparison-table { min-width: 340px; font-size: 13px; }
     .comparison-table th, .comparison-table td { padding: 10px 12px; }
   }
+  .color-selector { margin-bottom: 20px; }
+  .color-label {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--plum);
+    margin-bottom: 10px;
+    letter-spacing: 0.03em;
+  }
+  .color-label span { font-weight: 700; color: var(--rose); }
+  .color-options { display: flex; gap: 10px; }
+  .color-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 16px;
+    border: 1.5px solid var(--blush);
+    background: var(--white);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--plum);
+    cursor: pointer;
+    transition: border-color 0.2s, background 0.2s;
+  }
+  .color-btn:hover { border-color: var(--rose); }
+  .color-btn.active { border-color: var(--rose); background: var(--blush-light); }
+  .color-swatch {
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    display: inline-block;
+    flex-shrink: 0;
+  }
+  .color-btn.active .color-swatch { border-color: var(--rose) !important; }
   </style>
 </head>
 <body>
@@ -959,6 +993,19 @@
       <span class="stars">★★★★★</span>
       <span class="review-count">4.9 · 3,587 reviews</span>
     </div>
+    <div class="color-selector">
+  <p class="color-label">Color: <span id="selectedColorName">White</span></p>
+  <div class="color-options">
+    <button class="color-btn color-white active" data-color="white" onclick="selectColor('white')" aria-label="White">
+      <span class="color-swatch" style="background:#F5EDE8;border:2px solid transparent;"></span>
+      White
+    </button>
+    <button class="color-btn color-pink" data-color="pink" onclick="selectColor('pink')" aria-label="Pink">
+      <span class="color-swatch" style="background:#F4A7B9;border:2px solid transparent;"></span>
+      Pink
+    </button>
+  </div>
+</div>
     <div class="price-row">
       <span class="price-current">$54.99</span>
       <span class="price-compare">$83.00</span>
@@ -1308,32 +1355,63 @@
 <script>
 // ─── BUNDLE + CART SYSTEM ───
 const PRODUCTS = {
-  belt1: {
-    name: 'Menstrela™ Heat Belt — 1 Pack',
-    price: 54.99,
-    checkoutUrl: 'https://mbze2f-ir.myshopify.com/cart/43746042839105:1?channel=buy_button',
-    img: 'product-hero2.png'
+  white: {
+    belt1: {
+      name: 'Menstrela™ Heat Belt — 1 Pack (White)',
+      price: 54.99,
+      checkoutUrl: 'https://mbze2f-ir.myshopify.com/cart/43746042839105:1?channel=buy_button',
+      img: 'menstrela-heat-belt-cart.png'
+    },
+    belt2: {
+      name: 'Menstrela™ Heat Belt — 2 Pack (White)',
+      price: 94.99,
+      checkoutUrl: 'https://mbze2f-ir.myshopify.com/cart/43746397257793:1?channel=buy_button',
+      img: 'menstrela-heat-belt-cart.png'
+    },
+    belt3: {
+      name: 'Menstrela™ Heat Belt — 3 Pack (White)',
+      price: 134.99,
+      checkoutUrl: 'https://mbze2f-ir.myshopify.com/cart/43746401419329:1?channel=buy_button',
+      img: 'menstrela-heat-belt-cart.png'
+    }
   },
-  belt2: {
-    name: 'Menstrela™ Heat Belt — 2 Pack',
-    price: 94.99,
-    checkoutUrl: 'https://mbze2f-ir.myshopify.com/cart/43746397257793:1?channel=buy_button',
-    img: 'product-hero2.png'
-  },
-  belt3: {
-    name: 'Menstrela™ Heat Belt — 3 Pack',
-    price: 134.99,
-    checkoutUrl: 'https://mbze2f-ir.myshopify.com/cart/43746401419329:1?channel=buy_button',
-    img: 'product-hero2.png'
-  },
-  patches: {
-    name: 'Menstrela™ Heat Patches (10-pack)',
-    price: 12.99,
-    img: 'menstrela-heat-belt-cart.png'
+  pink: {
+    belt1: {
+      name: 'Menstrela™ Heat Belt — 1 Pack (Pink)',
+      price: 54.99,
+      checkoutUrl: 'https://mbze2f-ir.myshopify.com/cart/43764058751041:1?channel=buy_button',
+      img: 'menstrela-heat-belt-cart-pink.png'
+    },
+    belt2: {
+      name: 'Menstrela™ Heat Belt — 2 Pack (Pink)',
+      price: 94.99,
+      checkoutUrl: 'https://mbze2f-ir.myshopify.com/cart/43764066385985:1?channel=buy_button',
+      img: 'menstrela-heat-belt-cart-pink.png'
+    },
+    belt3: {
+      name: 'Menstrela™ Heat Belt — 3 Pack (Pink)',
+      price: 134.99,
+      checkoutUrl: 'https://mbze2f-ir.myshopify.com/cart/43764066353217:1?channel=buy_button',
+      img: 'menstrela-heat-belt-cart-pink.png'
+    }
   }
 };
 
+let selectedColor = 'white';
 let selectedBundle = 'belt1';
+
+function selectColor(color) {
+  selectedColor = color;
+  document.getElementById('selectedColorName').textContent = color.charAt(0).toUpperCase() + color.slice(1);
+  document.querySelectorAll('.color-btn').forEach(btn => {
+    btn.classList.toggle('active', btn.dataset.color === color);
+  });
+}
+
+function getCurrentProduct() {
+  return PRODUCTS[selectedColor][selectedBundle];
+}
+
 let hasPatches = false;
 
 // Bundle selector
@@ -1362,15 +1440,15 @@ initBundles();
 
 // Add to cart
 document.getElementById('addToCartBtn').addEventListener('click', () => {
-  const product = PRODUCTS[selectedBundle];
+  const product = getCurrentProduct();
   const cartData = {
     bundle: selectedBundle,
     beltName: product.name,
     beltPrice: product.price,
     beltImg: product.img,
     checkoutUrl: product.checkoutUrl,
-    patches: hasPatches,
-    patchPrice: PRODUCTS.patches.price
+    patches: false,
+    patchPrice: 12.99
   };
   const encoded = encodeURIComponent(JSON.stringify(cartData));
   window.location.href = 'cart.html?data=' + encoded;
