@@ -126,6 +126,66 @@
     .alt-option-btn:hover { border-color: #8B3A52; background: #F5E0E0; }
     .alt-option-name { font-size: 15px; font-weight: 500; color: #2C1A22; }
     .alt-option-price { font-family: 'Cormorant Garamond', serif; font-size: 20px; color: #8B3A52; font-weight: 500; }
+
+    /* DISCOUNT BOX */
+    .discount-box {
+      margin-bottom: 20px;
+      padding: 16px;
+      background: var(--cream);
+      border: 1px solid var(--blush-light);
+    }
+    .discount-label {
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--plum);
+      margin-bottom: 6px;
+    }
+    .discount-hint {
+      font-size: 12px;
+      color: var(--rose);
+      margin-bottom: 12px;
+      line-height: 1.5;
+    }
+    .discount-input-row {
+      display: flex;
+      gap: 8px;
+    }
+    .discount-input {
+      flex: 1;
+      border: 1.5px solid var(--blush);
+      padding: 10px 14px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 13px;
+      color: var(--plum);
+      background: var(--white);
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    .discount-input:focus { border-color: var(--rose); }
+    .discount-apply-btn {
+      background: var(--plum);
+      color: var(--white);
+      border: none;
+      padding: 10px 18px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s;
+      white-space: nowrap;
+    }
+    .discount-apply-btn:hover { background: var(--rose); }
+    .discount-msg {
+      font-size: 12px;
+      margin-top: 8px;
+      min-height: 16px;
+      font-weight: 500;
+    }
+    .discount-msg.success { color: #388e3c; }
+    .discount-msg.error { color: var(--rose); }
+    .summary-val.discount { color: #388e3c; font-weight: 600; }
   </style>
 </head>
 <body>
@@ -207,6 +267,16 @@ body > iframe { display: none !important; }
         <span class="summary-label">Shipping</span>
         <span class="summary-val" id="summaryShipping">—</span>
       </div>
+      <!-- Discount Code Box -->
+      <div class="discount-box">
+        <div class="discount-label">Have a discount code?</div>
+        <div class="discount-hint">Find exclusive codes on our TikTok <strong>@menstrela</strong></div>
+        <div class="discount-input-row">
+          <input type="text" id="discountInput" class="discount-input" placeholder="Enter code..." />
+          <button class="discount-apply-btn" onclick="applyDiscount()">Apply</button>
+        </div>
+        <div class="discount-msg" id="discountMsg"></div>
+      </div>
       <hr class="summary-divider" />
       <div class="summary-total-row">
         <span class="summary-total-label">Total</span>
@@ -243,20 +313,69 @@ const FREE_SHIPPING = 60;
 const PATCH_PRICE = 12.99;
 const SHIPPING_COST = 4.99;
 
+const VALID_CODES = {
+  'RELIEF10': { type: 'percent', value: 10, label: '10% off' },
+  'TIKTOK10': { type: 'percent', value: 10, label: '10% off' },
+  'MENSTRELA15': { type: 'fixed', value: 15, label: '$15 off' }
+};
+let appliedDiscount = null;
+
 let cartData = null;
 let hasPatches = false;
 
 try {
   const params = new URLSearchParams(window.location.search);
   const raw = params.get('data');
-  if (raw) cartData = JSON.parse(decodeURIComponent(raw));
+  if (raw) {
+    cartData = JSON.parse(decodeURIComponent(raw));
+    const color = localStorage.getItem('selectedColor') || 'white';
+    const isWhite = color !== 'pink';
+    const bundleKey = cartData.bundle || 'belt1';
+    const pinkCheckoutUrls = {
+      belt1: 'https://mbze2f-ir.myshopify.com/cart/43764058751041:1?channel=buy_button',
+      belt2: 'https://mbze2f-ir.myshopify.com/cart/43764066385985:1?channel=buy_button',
+      belt3: 'https://mbze2f-ir.myshopify.com/cart/43764066353217:1?channel=buy_button'
+    };
+    cartData.beltImg = isWhite ? 'menstrela-heat-belt-cart.png' : 'mentrela-heat-belt-cart-pink.png';
+    if (!isWhite) {
+      cartData.checkoutUrl = pinkCheckoutUrls[bundleKey] || pinkCheckoutUrls['belt1'];
+    }
+  }
 } catch(e) {}
 
 function getSubtotal() {
   if (!cartData) return 0;
   let total = cartData.beltPrice || 0;
   if (hasPatches) total += PATCH_PRICE;
-  return total;
+  if (appliedDiscount) {
+    if (appliedDiscount.type === 'percent') {
+      total = total * (1 - appliedDiscount.value / 100);
+    } else {
+      total = Math.max(0, total - appliedDiscount.value);
+    }
+  }
+  return parseFloat(total.toFixed(2));
+}
+
+function applyDiscount() {
+  const code = document.getElementById('discountInput').value.trim().toUpperCase();
+  const msg = document.getElementById('discountMsg');
+  if (!code) {
+    msg.textContent = 'Please enter a code.';
+    msg.className = 'discount-msg error';
+    return;
+  }
+  if (VALID_CODES[code]) {
+    appliedDiscount = { code, ...VALID_CODES[code] };
+    msg.textContent = '✓ Code applied — ' + appliedDiscount.label;
+    msg.className = 'discount-msg success';
+    render();
+  } else {
+    appliedDiscount = null;
+    msg.textContent = '✕ Invalid code. Find codes on our TikTok @menstrela';
+    msg.className = 'discount-msg error';
+    render();
+  }
 }
 
 function updateShippingProgress() {
@@ -297,7 +416,7 @@ function render() {
   const container = document.getElementById('cartItemsContainer');
   container.innerHTML = `
     <div class="cart-item">
-      <div class="cart-item-img"><img src="menstrela-heat-belt-cart.png" alt="${cartData.beltName}" /></div>
+      <div class="cart-item-img"><img src="${cartData.beltImg || 'menstrela-heat-belt-cart.png'}" alt="${cartData.beltName}" /></div>
       <div>
         <div class="cart-item-name">${cartData.beltName}</div>
         <div class="cart-item-meta">Built-in battery · Truly cordless</div>
@@ -309,7 +428,24 @@ function render() {
 
   document.getElementById('upsellSuggestion').style.display = cartData ? 'flex' : 'none';
 
-  document.getElementById('summarySubtotal').textContent = '$' + subtotal.toFixed(2);
+  const originalTotal = cartData.beltPrice + (hasPatches ? PATCH_PRICE : 0);
+  document.getElementById('summarySubtotal').textContent = '$' + originalTotal.toFixed(2);
+  let discountRow = document.getElementById('discountRow');
+  if (appliedDiscount) {
+    const saving = originalTotal - subtotal;
+    if (!discountRow) {
+      const row = document.createElement('div');
+      row.id = 'discountRow';
+      row.className = 'summary-row';
+      row.innerHTML = '<span class="summary-label">Discount (' + appliedDiscount.code + ')</span><span class="summary-val discount">-$' + saving.toFixed(2) + '</span>';
+      document.getElementById('summarySubtotal').parentElement.parentElement.insertBefore(row, document.getElementById('summarySubtotal').parentElement.nextSibling);
+    } else {
+      const saving2 = originalTotal - subtotal;
+      discountRow.innerHTML = '<span class="summary-label">Discount (' + appliedDiscount.code + ')</span><span class="summary-val discount">-$' + saving2.toFixed(2) + '</span>';
+    }
+  } else {
+    if (discountRow) discountRow.remove();
+  }
   document.getElementById('summaryShipping').textContent = subtotal >= FREE_SHIPPING ? 'FREE' : '$' + SHIPPING_COST.toFixed(2);
   document.getElementById('summaryShipping').className = 'summary-val' + (subtotal >= FREE_SHIPPING ? ' free' : '');
   document.getElementById('summaryTotal').textContent = '$' + total.toFixed(2);
@@ -365,7 +501,18 @@ function switchBundle(bundleKey) {
     belt2: { bundle: 'belt2', beltName: 'Menstrela™ Heat Belt — 2 Pack', beltPrice: 94.99, beltImg: 'menstrela-heat-belt-cart.png', checkoutUrl: 'https://mbze2f-ir.myshopify.com/cart/43746397257793:1?channel=buy_button' },
     belt3: { bundle: 'belt3', beltName: 'Menstrela™ Heat Belt — 3 Pack', beltPrice: 134.99, beltImg: 'menstrela-heat-belt-cart.png', checkoutUrl: 'https://mbze2f-ir.myshopify.com/cart/43746401419329:1?channel=buy_button' }
   };
-  cartData = BUNDLE_DATA[bundleKey];
+  const color = localStorage.getItem('selectedColor') || 'white';
+  const isPink = color === 'pink';
+  const pinkUrls = {
+    belt1: 'https://mbze2f-ir.myshopify.com/cart/43764058751041:1?channel=buy_button',
+    belt2: 'https://mbze2f-ir.myshopify.com/cart/43764066385985:1?channel=buy_button',
+    belt3: 'https://mbze2f-ir.myshopify.com/cart/43764066353217:1?channel=buy_button'
+  };
+  cartData = {
+    ...BUNDLE_DATA[bundleKey],
+    beltImg: isPink ? 'mentrela-heat-belt-cart-pink.png' : 'menstrela-heat-belt-cart.png',
+    checkoutUrl: isPink ? pinkUrls[bundleKey] : BUNDLE_DATA[bundleKey].checkoutUrl
+  };
   hasPatches = false;
   document.getElementById('removePopup').style.display = 'none';
   render();
@@ -384,31 +531,9 @@ function removePatches() {
 render();
 
 function triggerShopifyCheckout() {
-  const bundleMap = {
-    'belt1': 'product-component-1775520854348',
-    'belt2': 'product-component-1775520910398',
-    'belt3': 'product-component-1775520931179'
-  };
-  const bundle = cartData ? cartData.bundle : 'belt1';
-  const componentId = bundleMap[bundle] || bundleMap['belt1'];
-  const container = document.getElementById(componentId);
-  if (container) {
-    const iframe = container.querySelector('iframe');
-    if (iframe) {
-      try {
-        const btn = iframe.contentDocument.querySelector('.shopify-buy__btn');
-        if (btn) { btn.click(); return; }
-      } catch(e) {}
-    }
+  if (cartData && cartData.checkoutUrl) {
+    window.location.href = cartData.checkoutUrl;
   }
-  const allIframes = document.querySelectorAll('iframe');
-  for (let i = 0; i < allIframes.length; i++) {
-    try {
-      const btn = allIframes[i].contentDocument.querySelector('.shopify-buy__btn');
-      if (btn) { btn.click(); return; }
-    } catch(e) {}
-  }
-  alert('Checkout loading, please try again in a moment.');
 }
 </script>
 
