@@ -1,0 +1,669 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Your Cart — Menstrela™</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --rose: #8B3A52; --cream: #F5EDE8; --plum: #2C1A22;
+      --blush: #E8C4C4; --blush-light: #F5E0E0; --white: #FFFFFF; --rose-hover: #7a3148;
+    }
+    body { font-family: 'DM Sans', sans-serif; background: var(--cream); color: var(--plum); min-height: 100vh; }
+    h1, h2, h3, h4 { font-family: 'Cormorant Garamond', serif; font-weight: 400; }
+
+    /* ANNOUNCEMENT BAR */
+    .announcement-bar { background: var(--rose); color: var(--cream); height: 42px; overflow: hidden; display: flex; align-items: center; position: sticky; top: 0; z-index: 1001; }
+    .ann-track { display: inline-flex; align-items: center; white-space: nowrap; animation: annMarquee 26s linear infinite; }
+    @keyframes annMarquee { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
+    .ann-item { display: inline-flex; align-items: center; gap: 14px; font-size: 13px; font-weight: 500; letter-spacing: 0.04em; padding: 0 48px; }
+    .ann-dot { width: 4px; height: 4px; background: var(--blush); border-radius: 50%; flex-shrink: 0; opacity: 0.7; }
+
+    /* HEADER */
+    .header { position: sticky; top: 42px; z-index: 100; background: var(--white); border-bottom: 1px solid var(--blush-light); padding: 0 40px; display: flex; align-items: center; justify-content: space-between; height: 70px; box-shadow: 0 2px 24px rgba(44,26,34,0.07); }
+    .logo { font-family: 'Cormorant Garamond', serif; font-size: 26px; font-weight: 500; color: var(--plum); text-decoration: none; letter-spacing: 0.02em; }
+    .logo sup { font-size: 11px; vertical-align: super; font-weight: 400; }
+    .btn { display: inline-flex; align-items: center; justify-content: center; background: var(--rose); color: #FFF; border: none; padding: 13px 28px; font-family: 'DM Sans', sans-serif; font-size: 14px; font-weight: 600; letter-spacing: 0.05em; cursor: pointer; text-decoration: none; transition: background 0.2s, transform 0.15s; border-radius: 0; }
+    .btn:hover { background: var(--rose-hover); transform: translateY(-1px); }
+
+    /* PAGE */
+    .cart-page { max-width: 1100px; margin: 0 auto; padding: 60px 40px; }
+    .cart-page-title { font-size: clamp(32px, 4vw, 48px); color: var(--plum); margin-bottom: 8px; font-weight: 300; font-style: italic; }
+    .cart-page-sub { font-size: 14px; color: var(--plum); opacity: 0.55; margin-bottom: 40px; }
+
+    /* SHIPPING PROGRESS */
+    .shipping-progress-wrap { background: var(--white); padding: 22px 28px 24px; margin-bottom: 32px; border: 1px solid var(--blush-light); }
+    .shipping-msg-row { display: flex; align-items: center; gap: 12px; margin-bottom: 14px; }
+    .shipping-truck-icon { font-size: 22px; }
+    .shipping-msg-text { font-size: 14px; font-weight: 500; color: var(--plum); line-height: 1.4; }
+    .shipping-msg-text strong { color: var(--rose); }
+    .progress-track { position: relative; background: var(--blush-light); height: 8px; border-radius: 4px; overflow: hidden; }
+    .progress-bar { height: 100%; background: linear-gradient(90deg, var(--rose), #C46080); border-radius: 4px; transition: width 0.5s ease; }
+    .progress-labels { display: flex; justify-content: space-between; margin-top: 6px; font-size: 11px; color: var(--plum); opacity: 0.45; }
+
+    /* CART GRID */
+    .cart-grid { display: grid; grid-template-columns: 1fr 360px; gap: 32px; align-items: start; }
+
+    /* CART ITEMS */
+    .cart-items-panel { background: var(--white); border: 1px solid var(--blush-light); }
+    .cart-items-header { padding: 18px 24px; border-bottom: 1px solid var(--blush-light); display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 12px; font-size: 11px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: var(--plum); opacity: 0.5; }
+    .cart-item { padding: 20px 24px; display: grid; grid-template-columns: 72px 1fr auto auto; gap: 16px; align-items: center; border-bottom: 1px solid var(--blush-light); }
+    .cart-item:last-child { border-bottom: none; }
+    .cart-item-img { width: 72px; height: 72px; overflow: hidden; background: radial-gradient(ellipse at 50% 40%, #F5E0E0, #E8C4C4); flex-shrink: 0; }
+    .cart-item-img img { width: 100%; height: 100%; object-fit: cover; }
+    .cart-item-name { font-size: 15px; font-weight: 500; color: var(--plum); margin-bottom: 4px; }
+    .cart-item-meta { font-size: 12px; color: var(--plum); opacity: 0.5; }
+    .cart-item-price { font-family: 'Cormorant Garamond', serif; font-size: 22px; font-weight: 500; color: var(--plum); }
+    .cart-item-remove { background: none; border: none; cursor: pointer; width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; color: var(--plum); opacity: 0.3; font-size: 18px; transition: opacity 0.2s, color 0.2s; border-radius: 50%; }
+    .cart-item-remove:hover { opacity: 1; color: var(--rose); }
+
+    /* UPSELL */
+    .upsell-suggestion { background: var(--white); border: 1.5px dashed var(--blush); padding: 20px 24px; margin-top: 24px; display: flex; align-items: center; gap: 16px; opacity: 0.6; pointer-events: none; cursor: default; }
+    .upsell-img { width: 56px; height: 56px; background: radial-gradient(#F5E0E0, #E8C4C4); flex-shrink: 0; overflow: hidden; }
+    .upsell-img img { width: 100%; height: 100%; object-fit: cover; }
+    .upsell-text { flex: 1; }
+    .upsell-text strong { font-size: 14px; color: var(--plum); display: block; margin-bottom: 3px; }
+    .upsell-text span { font-size: 12px; color: var(--plum); opacity: 0.55; }
+    .upsell-add-btn { background: none; border: 1.5px solid var(--rose); color: var(--rose); padding: 8px 16px; font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 600; cursor: pointer; transition: background 0.2s, color 0.2s; white-space: nowrap; }
+    .upsell-add-btn:hover { background: var(--rose); color: var(--white); }
+    .upsell-price { font-family: 'Cormorant Garamond', serif; font-size: 20px; font-weight: 500; color: var(--plum); flex-shrink: 0; }
+
+    /* ORDER SUMMARY */
+    .order-summary { background: var(--white); border: 1px solid var(--blush-light); padding: 28px; position: sticky; top: 130px; }
+    .order-summary-title { font-size: 22px; color: var(--plum); margin-bottom: 24px; font-style: italic; border-bottom: 1px solid var(--blush-light); padding-bottom: 16px; }
+    .summary-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; font-size: 14px; }
+    .summary-label { color: var(--plum); opacity: 0.7; }
+    .summary-val { font-weight: 500; color: var(--plum); }
+    .summary-val.free { color: #388e3c; font-weight: 600; }
+    .summary-divider { border: none; border-top: 1px solid var(--blush-light); margin: 16px 0; }
+    .summary-total-row { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 24px; }
+    .summary-total-label { font-size: 14px; font-weight: 700; color: var(--plum); }
+    .summary-total-val { font-family: 'Cormorant Garamond', serif; font-size: 32px; font-weight: 500; color: var(--plum); }
+    .checkout-btn { width: 100%; padding: 18px; font-size: 15px; font-weight: 700; letter-spacing: 0.06em; margin-bottom: 14px; }
+    .continue-link { display: block; text-align: center; font-size: 13px; color: var(--plum); opacity: 0.5; text-decoration: none; transition: opacity 0.2s; }
+    .continue-link:hover { opacity: 1; color: var(--rose); }
+    .summary-badges { margin-top: 20px; padding-top: 18px; border-top: 1px solid var(--blush-light); display: flex; justify-content: space-around; gap: 8px; flex-wrap: wrap; }
+    .summary-badge { display: flex; flex-direction: column; align-items: center; gap: 4px; font-size: 11px; color: var(--plum); opacity: 0.55; text-align: center; font-weight: 500; }
+    .summary-badge-icon { font-size: 20px; }
+
+    /* EMPTY */
+    .cart-empty { padding: 60px 24px; text-align: center; }
+    .cart-empty h3 { font-size: 26px; color: var(--plum); margin-bottom: 12px; font-style: italic; }
+    .cart-empty p { font-size: 14px; color: var(--plum); opacity: 0.6; margin-bottom: 24px; }
+
+    /* FOOTER */
+    .footer-simple { background: var(--plum); color: var(--cream); text-align: center; padding: 24px; font-size: 13px; opacity: 0.8; margin-top: 80px; }
+
+    /* MOBILE */
+    @media (max-width: 768px) {
+      .cart-grid { grid-template-columns: 1fr; }
+      .cart-page { padding: 40px 20px; }
+      .header { padding: 0 20px; }
+      .order-summary { position: static; }
+    }
+    iframe[id*="toggle"] { display: none !important; }
+    .shopify-buy__cart-toggle-wrapper { display: none !important; }
+    [class*="cart-toggle"] { display: none !important; }
+    iframe { max-width: 100%; }
+    div[id*="shopify-buy-modal"] { display: none !important; }
+
+    /* ALTERNATIVE BUNDLE BUTTONS (remove popup) */
+    .alt-option-btn {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 16px 20px;
+      border: 1.5px solid #E8C4C4;
+      background: #fff;
+      cursor: pointer;
+      transition: border-color 0.2s, background 0.2s;
+      font-family: 'DM Sans', sans-serif;
+    }
+    .alt-option-btn:hover { border-color: #8B3A52; background: #F5E0E0; }
+    .alt-option-name { font-size: 15px; font-weight: 500; color: #2C1A22; }
+    .alt-option-price { font-family: 'Cormorant Garamond', serif; font-size: 20px; color: #8B3A52; font-weight: 500; }
+
+    /* DISCOUNT BOX */
+    .discount-box {
+      margin-bottom: 20px;
+      padding: 16px;
+      background: var(--cream);
+      border: 1px solid var(--blush-light);
+    }
+    .discount-label {
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--plum);
+      margin-bottom: 6px;
+    }
+    .discount-hint {
+      font-size: 12px;
+      color: var(--rose);
+      margin-bottom: 12px;
+      line-height: 1.5;
+    }
+    .discount-input-row {
+      display: flex;
+      gap: 8px;
+    }
+    .discount-input {
+      flex: 1;
+      border: 1.5px solid var(--blush);
+      padding: 10px 14px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 13px;
+      color: var(--plum);
+      background: var(--white);
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    .discount-input:focus { border-color: var(--rose); }
+    .discount-apply-btn {
+      background: var(--plum);
+      color: var(--white);
+      border: none;
+      padding: 10px 18px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s;
+      white-space: nowrap;
+    }
+    .discount-apply-btn:hover { background: var(--rose); }
+    .discount-msg {
+      font-size: 12px;
+      margin-top: 8px;
+      min-height: 16px;
+      font-weight: 500;
+    }
+    .discount-msg.success { color: #388e3c; }
+    .discount-msg.error { color: var(--rose); }
+    .summary-val.discount { color: #388e3c; font-weight: 600; }
+  </style>
+</head>
+<body>
+<style>
+body > iframe { display: none !important; }
+</style>
+
+<!-- ANNOUNCEMENT BAR -->
+<div class="announcement-bar">
+  <div class="ann-track">
+    <span class="ann-item">🚚 Free shipping this week only on orders over $60 <span class="ann-dot"></span></span>
+    <span class="ann-item">30-Day Money Back Guarantee <span class="ann-dot"></span></span>
+    <span class="ann-item">No power bank needed. Ever. <span class="ann-dot"></span></span>
+    <span class="ann-item">CE · ROHS · FCC · UKCA Certified <span class="ann-dot"></span></span>
+    <span class="ann-item">🚚 Free shipping this week only on orders over $60 <span class="ann-dot"></span></span>
+    <span class="ann-item">30-Day Money Back Guarantee <span class="ann-dot"></span></span>
+    <span class="ann-item">No power bank needed. Ever. <span class="ann-dot"></span></span>
+    <span class="ann-item">CE · ROHS · FCC · UKCA Certified <span class="ann-dot"></span></span>
+  </div>
+</div>
+
+<!-- HEADER -->
+<header class="header">
+  <a href="index.html" class="logo">Menstrela<sup>™</sup></a>
+  <a href="index.html" class="btn" style="font-size:13px;padding:10px 20px;">← Continue Shopping</a>
+</header>
+
+<!-- CART PAGE -->
+<div class="cart-page">
+  <h1 class="cart-page-title">Your Cart</h1>
+  <p class="cart-page-sub" id="cartSubtitle">Loading...</p>
+
+  <!-- SHIPPING PROGRESS -->
+  <div class="shipping-progress-wrap">
+    <div class="shipping-msg-row">
+      <span class="shipping-truck-icon">🚚</span>
+      <span class="shipping-msg-text" id="shippingMsg">Loading...</span>
+    </div>
+    <div class="progress-track">
+      <div class="progress-bar" id="progressBar" style="width:0%"></div>
+    </div>
+    <div class="progress-labels"><span>$0</span><span>Free shipping at $60</span></div>
+  </div>
+
+  <div class="cart-grid">
+    <!-- ITEMS -->
+    <div>
+      <div class="cart-items-panel">
+        <div class="cart-items-header">
+          <span>Product</span><span>Price</span><span></span>
+        </div>
+        <div id="cartItemsContainer"></div>
+        <div class="cart-empty" id="cartEmpty" style="display:none;">
+          <h3>Your cart is empty</h3>
+          <p>Looks like you haven't added anything yet.</p>
+          <a href="index.html" class="btn">Shop Now</a>
+        </div>
+      </div>
+
+      <!-- UPSELL -->
+      <div class="upsell-suggestion" id="upsellSuggestion" style="display:none;">
+        <div class="upsell-img" style="background: linear-gradient(135deg, #F5E0E0, #E8C4C4); display:flex; align-items:center; justify-content:center; font-size:24px;">🌿</div>
+        <div class="upsell-text">
+          <strong>Menstrela™ Heat Patches (10-pack) <span style="background:#8B3A52;color:#fff;font-size:10px;font-weight:700;letter-spacing:0.1em;padding:3px 8px;margin-left:6px;vertical-align:middle;">COMING SOON</span></strong>
+          <span>Disposable · 12-hour relief · Drug-free · Back soon</span>
+        </div>
+        <span class="upsell-price" style="opacity:0.4;">$12.99</span>
+      </div>
+    </div>
+
+    <!-- ORDER SUMMARY -->
+    <div class="order-summary">
+      <h3 class="order-summary-title">Order Summary</h3>
+      <div class="summary-row">
+        <span class="summary-label">Subtotal</span>
+        <span class="summary-val" id="summarySubtotal">$0.00</span>
+      </div>
+      <div class="summary-row">
+        <span class="summary-label">Shipping</span>
+        <span class="summary-val" id="summaryShipping">—</span>
+      </div>
+      <!-- Discount Code Box -->
+      <div class="discount-box">
+        <div class="discount-label">Have a discount code?</div>
+        <div class="discount-hint">Find exclusive codes on our TikTok <strong>@menstrela</strong></div>
+        <div class="discount-input-row">
+          <input type="text" id="discountInput" class="discount-input" placeholder="Enter code..." />
+          <button class="discount-apply-btn" onclick="applyDiscount()">Apply</button>
+        </div>
+        <div class="discount-msg" id="discountMsg"></div>
+      </div>
+      <hr class="summary-divider" />
+      <div class="summary-total-row">
+        <span class="summary-total-label">Total</span>
+        <span class="summary-total-val" id="summaryTotal">$0.00</span>
+      </div>
+      <button class="btn checkout-btn" id="checkoutBtn" onclick="triggerShopifyCheckout()">Checkout →</button>
+      <a href="index.html" class="continue-link">← Continue shopping</a>
+      <div class="summary-badges">
+        <div class="summary-badge"><span class="summary-badge-icon">🔒</span><span>Secure checkout</span></div>
+        <div class="summary-badge"><span class="summary-badge-icon">↩</span><span>30-day returns</span></div>
+        <div class="summary-badge"><span class="summary-badge-icon">✓</span><span>CE · ROHS certified</span></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="footer-simple">© 2026 Menstrela™. All rights reserved. · CE · ROHS · FCC · UKCA Certified</div>
+
+<script>
+// Aggressively hide Shopify toggle
+function hideShopifyToggle() {
+  const allIframes = document.querySelectorAll('iframe');
+  allIframes.forEach(iframe => {
+    if (iframe.src && iframe.src.includes('shopify')) {
+      iframe.style.display = 'none';
+    }
+  });
+  const toggles = document.querySelectorAll('[class*="toggle"], [id*="toggle"]');
+  toggles.forEach(el => el.style.display = 'none');
+}
+setInterval(hideShopifyToggle, 500);
+
+const FREE_SHIPPING = 60;
+const PATCH_PRICE = 12.99;
+const SHIPPING_COST = 4.99;
+
+const VALID_CODES = {
+  'RELIEF10': { type: 'percent', value: 10, label: '10% off' },
+  'TIKTOK10': { type: 'percent', value: 10, label: '10% off' },
+  'MENSTRELA15': { type: 'fixed', value: 15, label: '$15 off' }
+};
+let appliedDiscount = null;
+
+let cartData = null;
+let hasPatches = false;
+let popupSelectedColor = 'white';
+
+function setPopupColor(color) {
+  popupSelectedColor = color;
+  document.getElementById('popupColorWhite').style.borderColor = color === 'white' ? '#8B3A52' : 'transparent';
+  document.getElementById('popupColorPink').style.borderColor = color === 'pink' ? '#8B3A52' : 'transparent';
+}
+
+try {
+  const params = new URLSearchParams(window.location.search);
+  const raw = params.get('data');
+  if (raw) {
+    cartData = JSON.parse(decodeURIComponent(raw));
+    const color = localStorage.getItem('selectedColor') || 'white';
+    const isWhite = color !== 'pink';
+    const bundleKey = cartData.bundle || 'belt1';
+    const pinkCheckoutUrls = {
+      belt1: 'https://mbze2f-ir.myshopify.com/cart/43764058751041:1?channel=buy_button',
+      belt2: 'https://mbze2f-ir.myshopify.com/cart/43764066385985:1?channel=buy_button',
+      belt3: 'https://mbze2f-ir.myshopify.com/cart/43764066353217:1?channel=buy_button'
+    };
+    cartData.beltImg = isWhite ? 'menstrela-heat-belt-cart.png' : 'menstrela-heat-belt-cart-pink.png';
+    if (!isWhite) {
+      cartData.checkoutUrl = pinkCheckoutUrls[bundleKey] || pinkCheckoutUrls['belt1'];
+    }
+    if (cartData.beltName && !cartData.beltName.toLowerCase().includes('white') && !cartData.beltName.toLowerCase().includes('pink')) {
+      cartData.beltName += isWhite ? ' (White)' : ' (Pink)';
+    }
+  }
+} catch(e) {}
+
+function getSubtotal() {
+  if (!cartData) return 0;
+  let total = cartData.beltPrice || 0;
+  if (hasPatches) total += PATCH_PRICE;
+  if (appliedDiscount) {
+    if (appliedDiscount.type === 'percent') {
+      total = total * (1 - appliedDiscount.value / 100);
+    } else {
+      total = Math.max(0, total - appliedDiscount.value);
+    }
+  }
+  return parseFloat(total.toFixed(2));
+}
+
+function applyDiscount() {
+  const code = document.getElementById('discountInput').value.trim().toUpperCase();
+  const msg = document.getElementById('discountMsg');
+  if (!code) {
+    msg.textContent = 'Please enter a code.';
+    msg.className = 'discount-msg error';
+    return;
+  }
+  if (VALID_CODES[code]) {
+    appliedDiscount = { code, ...VALID_CODES[code] };
+    msg.textContent = '✓ Code applied — ' + appliedDiscount.label;
+    msg.className = 'discount-msg success';
+    render();
+  } else {
+    appliedDiscount = null;
+    msg.textContent = '✕ Invalid code. Find codes on our TikTok @menstrela';
+    msg.className = 'discount-msg error';
+    render();
+  }
+}
+
+function updateShippingProgress() {
+  const subtotal = getSubtotal();
+  const pct = Math.min((subtotal / FREE_SHIPPING) * 100, 100);
+  document.getElementById('progressBar').style.width = pct + '%';
+  const msg = document.getElementById('shippingMsg');
+  if (subtotal >= FREE_SHIPPING) {
+    msg.innerHTML = '<strong>🎉 You\'ve unlocked free shipping!</strong>';
+  } else {
+    const remaining = (FREE_SHIPPING - subtotal).toFixed(2);
+    msg.innerHTML = 'You\'re <strong>$' + remaining + ' away</strong> from free shipping';
+  }
+}
+
+function buildCheckoutUrl() {
+  if (!cartData) return '#';
+  return cartData.checkoutUrl;
+}
+
+function render() {
+  if (!cartData) {
+    document.getElementById('cartEmpty').style.display = 'block';
+    document.getElementById('cartSubtitle').textContent = '0 items';
+    document.getElementById('summarySubtotal').textContent = '$0.00';
+    document.getElementById('summaryTotal').textContent = '$0.00';
+    document.getElementById('summaryShipping').textContent = '—';
+    document.getElementById('checkoutBtn').style.opacity = '0.4';
+    document.getElementById('checkoutBtn').style.pointerEvents = 'none';
+    return;
+  }
+
+  const subtotal = getSubtotal();
+  const shipping = subtotal >= FREE_SHIPPING ? 0 : SHIPPING_COST;
+  const total = subtotal + shipping;
+  document.getElementById('cartSubtitle').textContent = '1 item';
+
+  const container = document.getElementById('cartItemsContainer');
+  container.innerHTML = `
+    <div class="cart-item">
+      <div class="cart-item-img"><img src="${cartData.beltName && cartData.beltName.toLowerCase().includes('pink') ? 'menstrela-heat-belt-cart-pink.png' : 'menstrela-heat-belt-cart.png'}" alt="${cartData.beltName}" /></div>
+      <div>
+        <div class="cart-item-name">${cartData.beltName}</div>
+        <div class="cart-item-meta">Built-in battery · Truly cordless</div>
+      </div>
+      <div class="cart-item-price">$${cartData.beltPrice.toFixed(2)}</div>
+      <button class="cart-item-remove" onclick="showRemovePopup()" aria-label="Remove">✕</button>
+    </div>
+  `;
+
+  document.getElementById('upsellSuggestion').style.display = cartData ? 'flex' : 'none';
+
+  const originalTotal = cartData.beltPrice + (hasPatches ? PATCH_PRICE : 0);
+  document.getElementById('summarySubtotal').textContent = '$' + originalTotal.toFixed(2);
+  let discountRow = document.getElementById('discountRow');
+  if (appliedDiscount) {
+    const saving = originalTotal - subtotal;
+    if (!discountRow) {
+      const row = document.createElement('div');
+      row.id = 'discountRow';
+      row.className = 'summary-row';
+      row.innerHTML = '<span class="summary-label">Discount (' + appliedDiscount.code + ')</span><span class="summary-val discount">-$' + saving.toFixed(2) + '</span>';
+      document.getElementById('summarySubtotal').parentElement.parentElement.insertBefore(row, document.getElementById('summarySubtotal').parentElement.nextSibling);
+    } else {
+      const saving2 = originalTotal - subtotal;
+      discountRow.innerHTML = '<span class="summary-label">Discount (' + appliedDiscount.code + ')</span><span class="summary-val discount">-$' + saving2.toFixed(2) + '</span>';
+    }
+  } else {
+    if (discountRow) discountRow.remove();
+  }
+  document.getElementById('summaryShipping').textContent = subtotal >= FREE_SHIPPING ? 'FREE' : '$' + SHIPPING_COST.toFixed(2);
+  document.getElementById('summaryShipping').className = 'summary-val' + (subtotal >= FREE_SHIPPING ? ' free' : '');
+  document.getElementById('summaryTotal').textContent = '$' + total.toFixed(2);
+
+  const checkoutBtn = document.getElementById('checkoutBtn');
+  checkoutBtn.href = buildCheckoutUrl();
+  checkoutBtn.style.opacity = '1';
+  checkoutBtn.style.pointerEvents = 'auto';
+
+  updateShippingProgress();
+}
+
+function addPatches() {
+  // Coming soon - do nothing
+  return;
+}
+
+const ALTERNATIVES = {
+  belt1: [
+    { key: 'belt2', name: '2 Belts — Buy one for a friend', price: '$94.99', tag: 'Free Shipping' },
+    { key: 'belt3', name: '3 Belts — Best value', price: '$134.99', tag: 'Best Value' }
+  ],
+  belt2: [
+    { key: 'belt1', name: '1 Belt — Standard', price: '$54.99', tag: 'You save $28' },
+    { key: 'belt3', name: '3 Belts — Best value', price: '$134.99', tag: 'Best Value' }
+  ],
+  belt3: [
+    { key: 'belt1', name: '1 Belt — Standard', price: '$54.99', tag: 'You save $28' },
+    { key: 'belt2', name: '2 Belts — Buy one for a friend', price: '$94.99', tag: 'Free Shipping' }
+  ]
+};
+
+function showRemovePopup() {
+  const popup = document.getElementById('removePopup');
+  popup.style.display = 'flex';
+  popupSelectedColor = cartData && cartData.beltName && cartData.beltName.toLowerCase().includes('pink') ? 'pink' : 'white';
+  setPopupColor(popupSelectedColor);
+  const bundle = cartData ? cartData.bundle : 'belt1';
+  const alts = ALTERNATIVES[bundle] || ALTERNATIVES['belt1'];
+  const container = document.getElementById('alternativeOptions');
+  container.innerHTML = alts.map(alt => `
+    <button class="alt-option-btn" onclick="switchBundleWithColor('${alt.key}')">
+      <div style="text-align:left;">
+        <div class="alt-option-name">${alt.name}</div>
+        <div style="font-size:11px;color:#8B3A52;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;margin-top:3px;">${alt.tag}</div>
+      </div>
+      <div class="alt-option-price">${alt.price}</div>
+    </button>
+  `).join('');
+}
+
+function switchBundle(bundleKey) {
+  const BUNDLE_DATA = {
+    belt1: { bundle: 'belt1', beltName: 'Menstrela™ Heat Belt — 1 Pack', beltPrice: 54.99, beltImg: 'menstrela-heat-belt-cart.png', checkoutUrl: 'https://mbze2f-ir.myshopify.com/cart/43746042839105:1?channel=buy_button' },
+    belt2: { bundle: 'belt2', beltName: 'Menstrela™ Heat Belt — 2 Pack', beltPrice: 94.99, beltImg: 'menstrela-heat-belt-cart.png', checkoutUrl: 'https://mbze2f-ir.myshopify.com/cart/43746397257793:1?channel=buy_button' },
+    belt3: { bundle: 'belt3', beltName: 'Menstrela™ Heat Belt — 3 Pack', beltPrice: 134.99, beltImg: 'menstrela-heat-belt-cart.png', checkoutUrl: 'https://mbze2f-ir.myshopify.com/cart/43746401419329:1?channel=buy_button' }
+  };
+  const color = localStorage.getItem('selectedColor') || 'white';
+  const isPink = color === 'pink';
+  const pinkUrls = {
+    belt1: 'https://mbze2f-ir.myshopify.com/cart/43764058751041:1?channel=buy_button',
+    belt2: 'https://mbze2f-ir.myshopify.com/cart/43764066385985:1?channel=buy_button',
+    belt3: 'https://mbze2f-ir.myshopify.com/cart/43764066353217:1?channel=buy_button'
+  };
+  cartData = {
+    ...BUNDLE_DATA[bundleKey],
+    beltImg: isPink ? 'mentrela-heat-belt-cart-pink.png' : 'menstrela-heat-belt-cart.png',
+    checkoutUrl: isPink ? pinkUrls[bundleKey] : BUNDLE_DATA[bundleKey].checkoutUrl
+  };
+  hasPatches = false;
+  document.getElementById('removePopup').style.display = 'none';
+  render();
+}
+
+function switchBundleWithColor(bundleKey) {
+  const color = popupSelectedColor;
+  const isWhite = color !== 'pink';
+  const WHITE_URLS = {
+    belt1: 'https://mbze2f-ir.myshopify.com/cart/43746042839105:1?channel=buy_button',
+    belt2: 'https://mbze2f-ir.myshopify.com/cart/43746397257793:1?channel=buy_button',
+    belt3: 'https://mbze2f-ir.myshopify.com/cart/43746401419329:1?channel=buy_button'
+  };
+  const PINK_URLS = {
+    belt1: 'https://mbze2f-ir.myshopify.com/cart/43764058751041:1?channel=buy_button',
+    belt2: 'https://mbze2f-ir.myshopify.com/cart/43764066385985:1?channel=buy_button',
+    belt3: 'https://mbze2f-ir.myshopify.com/cart/43764066353217:1?channel=buy_button'
+  };
+  const NAMES = { belt1: '1 Pack', belt2: '2 Pack', belt3: '3 Pack' };
+  const PRICES = { belt1: 54.99, belt2: 94.99, belt3: 134.99 };
+  cartData = {
+    bundle: bundleKey,
+    beltName: `Menstrela™ Heat Belt — ${NAMES[bundleKey]} (${isWhite ? 'White' : 'Pink'})`,
+    beltPrice: PRICES[bundleKey],
+    beltImg: isWhite ? 'menstrela-heat-belt-cart.png' : 'menstrela-heat-belt-cart-pink.png',
+    checkoutUrl: isWhite ? WHITE_URLS[bundleKey] : PINK_URLS[bundleKey]
+  };
+  hasPatches = false;
+  document.getElementById('removePopup').style.display = 'none';
+  render();
+}
+
+function confirmRemove() {
+  document.getElementById('removePopup').style.display = 'none';
+  window.location.href = 'index.html';
+}
+
+function removePatches() {
+  hasPatches = false;
+  render();
+}
+
+render();
+
+function triggerShopifyCheckout() {
+  if (cartData && cartData.checkoutUrl) {
+    window.location.href = cartData.checkoutUrl;
+  }
+}
+</script>
+
+<!-- Remove item popup -->
+<div id="removePopup" style="display:none;position:fixed;inset:0;background:rgba(44,26,34,0.6);z-index:9000;align-items:center;justify-content:center;">
+  <div style="background:#fff;max-width:480px;width:90%;padding:40px;text-align:center;">
+    <h2 style="font-family:'Cormorant Garamond',serif;font-size:28px;font-weight:300;color:#2C1A22;margin-bottom:12px;">Wait — before you go</h2>
+    <p style="font-size:14px;color:#2C1A22;opacity:0.65;margin-bottom:28px;line-height:1.7;">Would you like to try a different option instead?</p>
+    <div style="display:flex;gap:12px;justify-content:center;margin-bottom:16px;">
+  <button id="popupColorWhite" onclick="setPopupColor('white')" style="padding:8px 20px;border:2px solid #8B3A52;background:#F5EDE8;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:600;cursor:pointer;color:#2C1A22;">White</button>
+  <button id="popupColorPink" onclick="setPopupColor('pink')" style="padding:8px 20px;border:2px solid transparent;background:#F4A7B9;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:600;cursor:pointer;color:#2C1A22;">Pink</button>
+</div>
+    <div id="alternativeOptions" style="display:flex;flex-direction:column;gap:12px;margin-bottom:24px;"></div>
+    <button onclick="confirmRemove()" style="background:none;border:none;font-size:13px;color:#2C1A22;opacity:0.4;cursor:pointer;text-decoration:underline;">No thanks, remove item</button>
+  </div>
+</div>
+
+<!-- Hidden Shopify checkout buttons -->
+<div style="display:none;">
+  <div id='product-component-1775520854348'></div>
+  <div id='product-component-1775520910398'></div>
+  <div id='product-component-1775520931179'></div>
+</div>
+
+<script type="text/javascript">
+(function () {
+  var scriptURL = 'https://sdks.shopifycdn.com/buy-button/latest/buy-button-storefront.min.js';
+  if (window.ShopifyBuy) {
+    if (window.ShopifyBuy.UI) { ShopifyBuyInit(); } else { loadScript(); }
+  } else { loadScript(); }
+  function loadScript() {
+    var script = document.createElement('script');
+    script.async = true;
+    script.src = scriptURL;
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(script);
+    script.onload = ShopifyBuyInit;
+  }
+  function ShopifyBuyInit() {
+    var client = ShopifyBuy.buildClient({
+      domain: 'mbze2f-ir.myshopify.com',
+      storefrontAccessToken: '0d356de62d638aab4590ae0b4758b8c8',
+    });
+    ShopifyBuy.UI.onReady(client).then(function (ui) {
+      // 1 Pack
+      ui.createComponent('product', {
+        id: '7873289945153',
+        node: document.getElementById('product-component-1775520854348'),
+        moneyFormat: '%24%7B%7Bamount%7D%7D',
+        options: {
+          "product": {
+            "buttonDestination": "checkout",
+            "contents": { "img": false, "title": false, "price": false, "button": true },
+            "styles": { "button": { "background-color": "#8b3a52", ":hover": { "background-color": "#7d344a" } } },
+            "text": { "button": "Checkout" }
+          },
+          "toggle": { "styles": { "toggle": { "background-color": "#8b3a52" } } }
+        }
+      });
+      // 2 Pack
+      ui.createComponent('product', {
+        id: '7873485013057',
+        node: document.getElementById('product-component-1775520910398'),
+        moneyFormat: '%24%7B%7Bamount%7D%7D',
+        options: {
+          "product": {
+            "buttonDestination": "checkout",
+            "contents": { "img": false, "title": false, "price": false, "button": true },
+            "styles": { "button": { "background-color": "#8b3a52", ":hover": { "background-color": "#7d344a" } } },
+            "text": { "button": "Checkout" }
+          },
+          "toggle": { "styles": { "toggle": { "background-color": "#8b3a52" } } }
+        }
+      });
+      // 3 Pack
+      ui.createComponent('product', {
+        id: '7873487634497',
+        node: document.getElementById('product-component-1775520931179'),
+        moneyFormat: '%24%7B%7Bamount%7D%7D',
+        options: {
+          "product": {
+            "buttonDestination": "checkout",
+            "contents": { "img": false, "title": false, "price": false, "button": true },
+            "styles": { "button": { "background-color": "#8b3a52", ":hover": { "background-color": "#7d344a" } } },
+            "text": { "button": "Checkout" }
+          },
+          "toggle": { "styles": { "toggle": { "background-color": "#8b3a52" } } }
+        }
+      });
+    });
+  }
+})();
+</script>
+</body>
+</html>
