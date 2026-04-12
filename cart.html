@@ -416,7 +416,7 @@ function render() {
   const container = document.getElementById('cartItemsContainer');
   container.innerHTML = `
     <div class="cart-item">
-      <div class="cart-item-img"><img src="${cartData.beltImg || 'menstrela-heat-belt-cart.png'}" alt="${cartData.beltName}" /></div>
+     <div class="cart-item-img"><img src="${cartData.beltName && cartData.beltName.toLowerCase().includes('pink') ? 'menstrela-heat-belt-cart-pink.png' : 'menstrela-heat-belt-cart.png'}" alt="${cartData.beltName}" /></div>
       <div>
         <div class="cart-item-name">${cartData.beltName}</div>
         <div class="cart-item-meta">Built-in battery · Truly cordless</div>
