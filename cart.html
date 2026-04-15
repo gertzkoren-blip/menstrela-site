@@ -570,10 +570,11 @@ function removePatches() {
 render();
 
 function triggerShopifyCheckout() {
+  console.log('cartData:', JSON.stringify(cartData));
   if (cartData && cartData.checkoutUrl) {
-    window.location.href = cartData.checkoutUrl;
+    window.open(cartData.checkoutUrl, '_self');
   } else {
-    alert('Debug: ' + JSON.stringify(cartData));
+    alert('cartData: ' + JSON.stringify(cartData));
   }
 }
 </script>

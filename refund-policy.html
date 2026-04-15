@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Refund & Replacement Policy — Menstrela™</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --rose: #8B3A52; --cream: #F5EDE8; --plum: #2C1A22;
+      --blush: #E8C4C4; --blush-light: #F5E0E0; --white: #FFFFFF;
+    }
+    body { font-family: 'DM Sans', sans-serif; background: var(--cream); color: var(--plum); min-height: 100vh; }
+    h1, h2, h3 { font-family: 'Cormorant Garamond', serif; font-weight: 400; }
+
+    /* ANNOUNCEMENT BAR */
+    .announcement-bar { background: var(--rose); color: var(--cream); height: 42px; overflow: hidden; display: flex; align-items: center; position: sticky; top: 0; z-index: 1001; }
+    .ann-track { display: inline-flex; align-items: center; white-space: nowrap; animation: annMarquee 26s linear infinite; }
+    @keyframes annMarquee { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
+    .ann-item { display: inline-flex; align-items: center; gap: 14px; font-size: 13px; font-weight: 500; letter-spacing: 0.04em; padding: 0 48px; }
+    .ann-dot { width: 4px; height: 4px; background: var(--blush); border-radius: 50%; flex-shrink: 0; opacity: 0.7; }
+
+    /* HEADER */
+    .header { position: sticky; top: 42px; z-index: 100; background: var(--white); border-bottom: 1px solid var(--blush-light); padding: 0 40px; display: flex; align-items: center; justify-content: space-between; height: 70px; box-shadow: 0 2px 24px rgba(44,26,34,0.07); }
+    .logo { font-family: 'Cormorant Garamond', serif; font-size: 26px; font-weight: 500; color: var(--plum); text-decoration: none; letter-spacing: 0.02em; }
+    .logo sup { font-size: 11px; vertical-align: super; font-weight: 400; }
+    .back-btn { display: inline-flex; align-items: center; gap: 8px; color: var(--plum); text-decoration: none; font-size: 13px; font-weight: 500; opacity: 0.6; transition: opacity 0.2s; }
+    .back-btn:hover { opacity: 1; color: var(--rose); }
+
+    /* PAGE */
+    .policy-page { max-width: 780px; margin: 0 auto; padding: 80px 40px; }
+    .policy-eyebrow { font-size: 11px; font-weight: 600; letter-spacing: 0.2em; text-transform: uppercase; color: var(--rose); margin-bottom: 16px; }
+    .policy-title { font-size: clamp(36px, 5vw, 56px); font-weight: 300; color: var(--plum); margin-bottom: 12px; line-height: 1.1; }
+    .policy-subtitle { font-size: 15px; color: var(--plum); opacity: 0.6; margin-bottom: 56px; line-height: 1.7; }
+    .policy-divider { border: none; border-top: 1px solid var(--blush); margin: 40px 0; }
+
+    .policy-section { margin-bottom: 48px; }
+    .policy-section h2 { font-size: 26px; font-weight: 400; color: var(--plum); margin-bottom: 16px; font-style: italic; }
+    .policy-section p { font-size: 15px; line-height: 1.85; color: var(--plum); opacity: 0.8; margin-bottom: 14px; }
+    .policy-section ul { padding-left: 20px; margin-bottom: 14px; }
+    .policy-section ul li { font-size: 15px; line-height: 1.85; color: var(--plum); opacity: 0.8; margin-bottom: 8px; }
+
+    .highlight-box { background: var(--white); border-left: 4px solid var(--rose); padding: 20px 24px; margin: 24px 0; }
+    .highlight-box p { margin: 0; font-size: 15px; line-height: 1.7; color: var(--plum); opacity: 0.85; }
+    .highlight-box strong { color: var(--rose); }
+
+    .contact-box { background: var(--plum); color: var(--cream); padding: 40px; text-align: center; margin-top: 56px; }
+    .contact-box h3 { font-family: 'Cormorant Garamond', serif; font-size: 28px; font-weight: 300; margin-bottom: 12px; font-style: italic; }
+    .contact-box p { font-size: 14px; opacity: 0.75; margin-bottom: 20px; line-height: 1.7; }
+    .contact-box a { display: inline-block; background: var(--rose); color: var(--white); padding: 12px 28px; font-family: 'DM Sans', sans-serif; font-size: 14px; font-weight: 600; text-decoration: none; letter-spacing: 0.05em; transition: background 0.2s; }
+    .contact-box a:hover { background: #7a3148; }
+
+    .footer-simple { background: var(--plum); color: var(--cream); text-align: center; padding: 24px; font-size: 13px; opacity: 0.8; margin-top: 0; }
+
+    @media (max-width: 768px) {
+      .policy-page { padding: 48px 24px; }
+      .header { padding: 0 20px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ANNOUNCEMENT BAR -->
+<div class="announcement-bar">
+  <div class="ann-track">
+    <span class="ann-item">30-Day Money Back Guarantee <span class="ann-dot"></span></span>
+    <span class="ann-item">No power bank needed. Ever. <span class="ann-dot"></span></span>
+    <span class="ann-item">CE · ROHS · FCC · UKCA Certified <span class="ann-dot"></span></span>
+    <span class="ann-item">🚚 Free shipping this week only on orders over $60 <span class="ann-dot"></span></span>
+    <span class="ann-item">30-Day Money Back Guarantee <span class="ann-dot"></span></span>
+    <span class="ann-item">No power bank needed. Ever. <span class="ann-dot"></span></span>
+    <span class="ann-item">CE · ROHS · FCC · UKCA Certified <span class="ann-dot"></span></span>
+    <span class="ann-item">🚚 Free shipping this week only on orders over $60 <span class="ann-dot"></span></span>
+  </div>
+</div>
+
+<!-- HEADER -->
+<header class="header">
+  <a href="index.html" class="logo">Menstrela<sup>™</sup></a>
+  <a href="index.html" class="back-btn">← Back to store</a>
+</header>
+
+<!-- POLICY PAGE -->
+<div class="policy-page">
+  <p class="policy-eyebrow">Customer Promise</p>
+  <h1 class="policy-title">Refund & Replacement Policy</h1>
+  <p class="policy-subtitle">We stand behind every Menstrela™ product. If something isn't right, we'll make it right — no hassle, no judgment.</p>
+
+  <div class="highlight-box">
+    <p><strong>30-Day Money Back Guarantee.</strong> If Menstrela doesn't bring you relief within 30 days of delivery, contact us for a full refund. No questions asked.</p>
+  </div>
+
+  <hr class="policy-divider" />
+
+  <div class="policy-section">
+    <h2>What we cover</h2>
+    <p>We offer a full refund or free replacement if:</p>
+    <ul>
+      <li>The product arrives damaged or defective</li>
+      <li>The product stops working within 30 days of delivery</li>
+      <li>The wrong item was delivered</li>
+      <li>The package was lost in transit and never arrived</li>
+      <li>You are not satisfied with the product within 30 days of delivery</li>
+    </ul>
+  </div>
+
+  <div class="policy-section">
+    <h2>Refund option</h2>
+    <p>If you would like a full refund, we will return the full purchase price to your original payment method within 5–10 business days of approving your request.</p>
+    <p>You do not need to return the product in most cases. We may ask for a photo of the issue to process your request faster.</p>
+  </div>
+
+  <div class="policy-section">
+    <h2>Replacement option</h2>
+    <p>If you prefer a replacement instead of a refund, we will ship a brand new unit to you at no cost. Replacements are shipped within 2–3 business days of approval and typically arrive within 7–14 days depending on your location.</p>
+    <p>You do not need to return the original product to receive a replacement.</p>
+  </div>
+
+  <div class="policy-section">
+    <h2>How to request a refund or replacement</h2>
+    <p>Simply contact us by email with the following information:</p>
+    <ul>
+      <li>Your full name</li>
+      <li>Your order number</li>
+      <li>A brief description of the issue</li>
+      <li>A photo of the product if it is damaged or defective</li>
+    </ul>
+    <p>We will respond within 24–48 hours and resolve your issue as quickly as possible.</p>
+  </div>
+
+  <div class="policy-section">
+    <h2>What is not covered</h2>
+    <ul>
+      <li>Requests made more than 30 days after delivery</li>
+      <li>Damage caused by misuse or improper care</li>
+      <li>Change of mind after 30 days</li>
+    </ul>
+  </div>
+
+  <div class="policy-section">
+    <h2>Shipping costs</h2>
+    <p>We cover all shipping costs for replacements. For refunds, you are not required to ship the product back — we handle everything on our end.</p>
+  </div>
+
+  <div class="contact-box">
+    <h3>Need help with your order?</h3>
+    <p>Our team is here for you. Reach out and we'll take care of you within 24 hours.</p>
+    <a href="mailto:support@menstrela.com">Contact Support</a>
+  </div>
+</div>
+
+<div class="footer-simple">© 2026 Menstrela™. All rights reserved. · CE · ROHS · FCC · UKCA Certified</div>
+
+</body>
+</html>

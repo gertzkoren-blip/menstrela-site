@@ -748,6 +748,21 @@
       font-weight: 700 !important;
       color: #FFFFFF !important;
     }
+  @keyframes welcomeDot {
+    0%, 100% { opacity: 0.2; transform: scale(0.8); }
+    50% { opacity: 1; transform: scale(1.2); }
+  }
+  .welcome-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: #8B3A52;
+    animation: welcomeDot 1.2s ease-in-out infinite;
+  }
+  body.welcome-active {
+    overflow: hidden;
+  }
+
   /* MOBILE IMAGE CAROUSEL */
   .mobile-img-nav {
     display: none;
@@ -780,9 +795,93 @@
     .comparison-table { min-width: 340px; font-size: 13px; }
     .comparison-table th, .comparison-table td { padding: 10px 12px; }
   }
+  .color-selector { margin-bottom: 20px; }
+  .color-label {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--plum);
+    margin-bottom: 10px;
+    letter-spacing: 0.03em;
+  }
+  .color-label span { font-weight: 700; color: var(--rose); }
+  .color-options { display: flex; gap: 10px; }
+  .color-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 16px;
+    border: 1.5px solid var(--blush);
+    background: var(--white);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--plum);
+    cursor: pointer;
+    transition: border-color 0.2s, background 0.2s;
+  }
+  .color-btn:hover { border-color: var(--rose); }
+  .color-btn.active { border-color: var(--rose); background: var(--blush-light); }
+  .color-swatch {
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    display: inline-block;
+    flex-shrink: 0;
+  }
+  .color-btn.active .color-swatch { border-color: var(--rose) !important; }
   </style>
 </head>
 <body>
+
+<!-- WELCOME SCREEN -->
+<div id="welcomeScreen" style="
+  position: fixed;
+  inset: 0;
+  z-index: 99999;
+  background: #2C1A22;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  transition: opacity 0.8s ease;
+">
+  <div id="welcomeContent" style="
+    text-align: center;
+    opacity: 0;
+    transform: translateY(16px);
+    transition: opacity 0.9s ease, transform 0.9s ease;
+  ">
+    <div style="
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(36px, 8vw, 64px);
+      font-weight: 300;
+      color: #F5EDE8;
+      letter-spacing: 0.08em;
+      margin-bottom: 16px;
+    ">Menstrela<sup style="font-size:0.4em;vertical-align:super;">™</sup></div>
+    <div style="
+      font-family: 'DM Sans', sans-serif;
+      font-size: clamp(12px, 3vw, 15px);
+      font-weight: 400;
+      color: #E8C4C4;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      opacity: 0.8;
+    ">Relief that moves with you.</div>
+    <div style="
+      margin-top: 40px;
+      display: flex;
+      gap: 8px;
+      justify-content: center;
+      align-items: center;
+    ">
+      <div class="welcome-dot"></div>
+      <div class="welcome-dot" style="animation-delay:0.2s"></div>
+      <div class="welcome-dot" style="animation-delay:0.4s"></div>
+    </div>
+  </div>
+</div>
 
 <!-- ─── ANNOUNCEMENT BAR ─── -->
 <div class="announcement-bar" aria-label="Promotions">
@@ -809,6 +908,7 @@
     <a href="#how-it-works" class="nav-link">How It Works</a>
     <a href="#reviews" class="nav-link">Reviews</a>
     <a href="#faq" class="nav-link">FAQ</a>
+    <a href="refund-policy.html" class="nav-link">Refund Policy</a>
     <a href="cart.html" class="cart-btn" aria-label="View Cart">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>
     </a>
@@ -894,6 +994,19 @@
       <span class="stars">★★★★★</span>
       <span class="review-count">4.9 · 3,587 reviews</span>
     </div>
+    <div class="color-selector">
+  <p class="color-label">Color: <span id="selectedColorName">White</span></p>
+  <div class="color-options">
+    <button class="color-btn color-white active" data-color="white" onclick="selectColor('white')" aria-label="White">
+      <span class="color-swatch" style="background:#F5EDE8;border:2px solid transparent;"></span>
+      White
+    </button>
+    <button class="color-btn color-pink" data-color="pink" onclick="selectColor('pink')" aria-label="Pink">
+      <span class="color-swatch" style="background:#F4A7B9;border:2px solid transparent;"></span>
+      Pink
+    </button>
+  </div>
+</div>
     <div class="price-row">
       <span class="price-current">$54.99</span>
       <span class="price-compare">$83.00</span>
@@ -1095,12 +1208,6 @@
     <button class="rev-arrow rev-prev" onclick="slideReviews(-1)" aria-label="Previous">‹</button>
     <div class="reviews-carousel" id="reviewsCarousel">
       <div class="review-card">
-        <div class="review-stars">★★★★☆</div>
-        <span class="review-quote-mark">"</span>
-        <p class="review-text">I used to call in sick literally every month. Had this for 6 weeks and haven't missed a single day of work. Wore it to a meeting last Tuesday — nobody had a clue. Honestly wish I'd found it sooner.</p>
-        <div class="review-author"><div class="author-avatar">S</div><div class="author-info"><span class="author-name">Serenity M.</span><span class="author-meta">Toronto, Canada <span class="verified-badge">✓ VERIFIED</span></span></div></div>
-      </div>
-      <div class="review-card">
         <div class="review-stars">★★★★★</div>
         <span class="review-quote-mark">"</span>
         <p class="review-text">Ok so I bought the other popular one first. Found out AFTER it arrived that it needs a whole separate power bank?? Returned it immediately. Got Menstrela instead and this is actually what I thought I was getting the first time.</p>
@@ -1117,6 +1224,12 @@
         <span class="review-quote-mark">"</span>
         <p class="review-text">Been using it for 2 months now. I genuinely don't dread my period anymore which is something I never thought I'd say. The heat kicks in so fast and the vibration setting is everything.</p>
         <div class="review-author"><div class="author-avatar">M</div><div class="author-info"><span class="author-name">Maya T.</span><span class="author-meta">Vancouver, Canada <span class="verified-badge">✓ VERIFIED</span></span></div></div>
+      </div>
+      <div class="review-card">
+        <div class="review-stars">★★★★☆</div>
+        <span class="review-quote-mark">"</span>
+        <p class="review-text">I used to call in sick literally every month. Had this for 6 weeks and haven't missed a single day of work. Wore it to a meeting last Tuesday — nobody had a clue. Honestly wish I'd found it sooner.</p>
+        <div class="review-author"><div class="author-avatar">S</div><div class="author-info"><span class="author-name">Serenity M.</span><span class="author-meta">Toronto, Canada <span class="verified-badge">✓ VERIFIED</span></span></div></div>
       </div>
       <div class="review-card">
         <div class="review-stars">★★★★★</div>
@@ -1243,32 +1356,63 @@
 <script>
 // ─── BUNDLE + CART SYSTEM ───
 const PRODUCTS = {
-  belt1: {
-    name: 'Menstrela™ Heat Belt — 1 Pack',
-    price: 54.99,
-    checkoutUrl: 'https://mbze2f-ir.myshopify.com/cart/43746042839105:1?channel=buy_button',
-    img: 'product-hero2.png'
+  white: {
+    belt1: {
+      name: 'Menstrela™ Heat Belt — 1 Pack (White)',
+      price: 54.99,
+      checkoutUrl: 'https://mbze2f-ir.myshopify.com/cart/43746042839105:1?channel=buy_button',
+      img: 'menstrela-heat-belt-cart.png'
+    },
+    belt2: {
+      name: 'Menstrela™ Heat Belt — 2 Pack (White)',
+      price: 94.99,
+      checkoutUrl: 'https://mbze2f-ir.myshopify.com/cart/43746397257793:1?channel=buy_button',
+      img: 'menstrela-heat-belt-cart.png'
+    },
+    belt3: {
+      name: 'Menstrela™ Heat Belt — 3 Pack (White)',
+      price: 134.99,
+      checkoutUrl: 'https://mbze2f-ir.myshopify.com/cart/43746401419329:1?channel=buy_button',
+      img: 'menstrela-heat-belt-cart.png'
+    }
   },
-  belt2: {
-    name: 'Menstrela™ Heat Belt — 2 Pack',
-    price: 94.99,
-    checkoutUrl: 'https://mbze2f-ir.myshopify.com/cart/43746397257793:1?channel=buy_button',
-    img: 'product-hero2.png'
-  },
-  belt3: {
-    name: 'Menstrela™ Heat Belt — 3 Pack',
-    price: 134.99,
-    checkoutUrl: 'https://mbze2f-ir.myshopify.com/cart/43746401419329:1?channel=buy_button',
-    img: 'product-hero2.png'
-  },
-  patches: {
-    name: 'Menstrela™ Heat Patches (10-pack)',
-    price: 12.99,
-    img: 'menstrela-heat-belt-cart.png'
+  pink: {
+    belt1: {
+      name: 'Menstrela™ Heat Belt — 1 Pack (Pink)',
+      price: 54.99,
+      checkoutUrl: 'https://mbze2f-ir.myshopify.com/cart/43764058751041:1?channel=buy_button',
+      img: 'menstrela-heat-belt-cart-pink.png'
+    },
+    belt2: {
+      name: 'Menstrela™ Heat Belt — 2 Pack (Pink)',
+      price: 94.99,
+      checkoutUrl: 'https://mbze2f-ir.myshopify.com/cart/43764066385985:1?channel=buy_button',
+      img: 'menstrela-heat-belt-cart-pink.png'
+    },
+    belt3: {
+      name: 'Menstrela™ Heat Belt — 3 Pack (Pink)',
+      price: 134.99,
+      checkoutUrl: 'https://mbze2f-ir.myshopify.com/cart/43764066353217:1?channel=buy_button',
+      img: 'menstrela-heat-belt-cart-pink.png'
+    }
   }
 };
 
+let selectedColor = 'white';
 let selectedBundle = 'belt1';
+
+function selectColor(color) {
+  selectedColor = color;
+  document.getElementById('selectedColorName').textContent = color.charAt(0).toUpperCase() + color.slice(1);
+  document.querySelectorAll('.color-btn').forEach(btn => {
+    btn.classList.toggle('active', btn.dataset.color === color);
+  });
+}
+
+function getCurrentProduct() {
+  return PRODUCTS[selectedColor][selectedBundle];
+}
+
 let hasPatches = false;
 
 // Bundle selector
@@ -1297,15 +1441,15 @@ initBundles();
 
 // Add to cart
 document.getElementById('addToCartBtn').addEventListener('click', () => {
-  const product = PRODUCTS[selectedBundle];
+  const product = getCurrentProduct();
   const cartData = {
     bundle: selectedBundle,
     beltName: product.name,
     beltPrice: product.price,
     beltImg: product.img,
     checkoutUrl: product.checkoutUrl,
-    patches: hasPatches,
-    patchPrice: PRODUCTS.patches.price
+    patches: false,
+    patchPrice: 12.99
   };
   const encoded = encodeURIComponent(JSON.stringify(cartData));
   window.location.href = 'cart.html?data=' + encoded;
@@ -1483,6 +1627,28 @@ function mobileImgNav(dir) {
 if (document.getElementById('mainProductImgEl')) {
   document.getElementById('mainProductImgEl').style.transition = 'opacity 0.15s ease';
 }
+
+// ─── WELCOME SCREEN ───
+(function() {
+  const screen = document.getElementById('welcomeScreen');
+  const content = document.getElementById('welcomeContent');
+  if (!screen) return;
+  document.body.classList.add('welcome-active');
+  // Fade in content after 100ms
+  setTimeout(() => {
+    content.style.opacity = '1';
+    content.style.transform = 'translateY(0)';
+  }, 100);
+  // Start fade out after 2.5 seconds
+  setTimeout(() => {
+    screen.style.opacity = '0';
+    document.body.classList.remove('welcome-active');
+  }, 2500);
+  // Remove from DOM after fade completes
+  setTimeout(() => {
+    screen.remove();
+  }, 3300);
+})();
 </script>
 
 </body>
