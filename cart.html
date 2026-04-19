@@ -570,9 +570,11 @@ function removePatches() {
 render();
 
 function triggerShopifyCheckout() {
-  console.log('cartData:', JSON.stringify(cartData));
   if (cartData && cartData.checkoutUrl) {
-    window.open(cartData.checkoutUrl, '_self');
+    const url = cartData.checkoutUrl.startsWith('http')
+      ? cartData.checkoutUrl
+      : 'https://mbze2f-ir.myshopify.com/cart/' + cartData.checkoutUrl;
+    window.location.replace(url);
   } else {
     alert('cartData: ' + JSON.stringify(cartData));
   }
