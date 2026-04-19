@@ -461,7 +461,6 @@ function render() {
   document.getElementById('summaryTotal').textContent = '$' + total.toFixed(2);
 
   const checkoutBtn = document.getElementById('checkoutBtn');
-  checkoutBtn.href = buildCheckoutUrl();
   checkoutBtn.style.opacity = '1';
   checkoutBtn.style.pointerEvents = 'auto';
 
