@@ -584,7 +584,7 @@ function triggerShopifyCheckout() {
   const color = cartData && cartData.beltName && cartData.beltName.toLowerCase().includes('pink') ? 'pink' : 'white';
   const bundle = cartData ? cartData.bundle : 'belt1';
   const url = urls[color][bundle] || urls.white.belt1;
-  window.open(url, 'shopify_checkout', 'width=500,height=700,scrollbars=yes');
+  window.open('https://mbze2f-ir.myshopify.com/cart/' + url.split('/cart/')[1], '_blank');
 }
 </script>
 
