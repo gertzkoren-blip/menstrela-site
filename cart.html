@@ -570,14 +570,22 @@ function removePatches() {
 render();
 
 function triggerShopifyCheckout() {
-  if (cartData && cartData.checkoutUrl) {
-    const url = cartData.checkoutUrl.startsWith('http')
-      ? cartData.checkoutUrl
-      : 'https://mbze2f-ir.myshopify.com/cart/' + cartData.checkoutUrl;
-    window.location.replace(url);
-  } else {
-    alert('cartData: ' + JSON.stringify(cartData));
-  }
+  const urls = {
+    white: {
+      belt1: 'https://mbze2f-ir.myshopify.com/cart/43764050133057:1?channel=buy_button',
+      belt2: 'https://mbze2f-ir.myshopify.com/cart/43764066582593:1?channel=buy_button',
+      belt3: 'https://mbze2f-ir.myshopify.com/cart/43764066517057:1?channel=buy_button'
+    },
+    pink: {
+      belt1: 'https://mbze2f-ir.myshopify.com/cart/43764058751041:1?channel=buy_button',
+      belt2: 'https://mbze2f-ir.myshopify.com/cart/43764066385985:1?channel=buy_button',
+      belt3: 'https://mbze2f-ir.myshopify.com/cart/43764066353217:1?channel=buy_button'
+    }
+  };
+  const color = cartData && cartData.beltName && cartData.beltName.toLowerCase().includes('pink') ? 'pink' : 'white';
+  const bundle = cartData ? cartData.bundle : 'belt1';
+  const url = urls[color][bundle] || urls.white.belt1;
+  window.open(url, 'shopify_checkout', 'width=500,height=700,scrollbars=yes');
 }
 </script>
 
