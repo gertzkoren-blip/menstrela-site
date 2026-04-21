@@ -197,11 +197,11 @@ body > iframe { display: none !important; }
 <!-- ANNOUNCEMENT BAR -->
 <div class="announcement-bar">
   <div class="ann-track">
-    <span class="ann-item">🚚 Free shipping this week only on orders over $50 <span class="ann-dot"></span></span>
+    <span class="ann-item">🚚 Free shipping this week only on orders over $40 <span class="ann-dot"></span></span>
     <span class="ann-item">30-Day Money Back Guarantee <span class="ann-dot"></span></span>
     <span class="ann-item">No power bank needed. Ever. <span class="ann-dot"></span></span>
     <span class="ann-item">CE · ROHS · FCC · UKCA Certified <span class="ann-dot"></span></span>
-    <span class="ann-item">🚚 Free shipping this week only on orders over $50 <span class="ann-dot"></span></span>
+    <span class="ann-item">🚚 Free shipping this week only on orders over $40 <span class="ann-dot"></span></span>
     <span class="ann-item">30-Day Money Back Guarantee <span class="ann-dot"></span></span>
     <span class="ann-item">No power bank needed. Ever. <span class="ann-dot"></span></span>
     <span class="ann-item">CE · ROHS · FCC · UKCA Certified <span class="ann-dot"></span></span>
@@ -228,7 +228,7 @@ body > iframe { display: none !important; }
     <div class="progress-track">
       <div class="progress-bar" id="progressBar" style="width:0%"></div>
     </div>
-    <div class="progress-labels"><span>$0</span><span>Free shipping at $50</span></div>
+    <div class="progress-labels"><span>$0</span><span>Free shipping at $40</span></div>
   </div>
 
   <div class="cart-grid">
@@ -300,7 +300,7 @@ function hideShopifyToggle() {
 }
 setInterval(hideShopifyToggle, 500);
 
-const FREE_SHIPPING = 50;
+const FREE_SHIPPING = 40;
 const PATCH_PRICE = 12.99;
 const SHIPPING_COST = 4.99;
 
@@ -465,16 +465,16 @@ function addPatches() {
 
 const ALTERNATIVES = {
   belt1: [
-    { key: 'belt2', name: '2 Belts — Buy one for a friend', price: '$94.99', tag: 'Free Shipping' },
-    { key: 'belt3', name: '3 Belts — Best value', price: '$134.99', tag: 'Best Value' }
+    { key: 'belt2', name: '2 Belts — Buy one for a friend', price: '$64.99', tag: 'Free Shipping' },
+    { key: 'belt3', name: '3 Belts — Best value', price: '$89.99', tag: 'Best Value' }
   ],
   belt2: [
-    { key: 'belt1', name: '1 Belt — Standard', price: '$54.99', tag: 'You save $28' },
-    { key: 'belt3', name: '3 Belts — Best value', price: '$134.99', tag: 'Best Value' }
+    { key: 'belt1', name: '1 Belt — Standard', price: '$39.99', tag: 'You save $24' },
+    { key: 'belt3', name: '3 Belts — Best value', price: '$89.99', tag: 'Best Value' }
   ],
   belt3: [
-    { key: 'belt1', name: '1 Belt — Standard', price: '$54.99', tag: 'You save $28' },
-    { key: 'belt2', name: '2 Belts — Buy one for a friend', price: '$94.99', tag: 'Free Shipping' }
+    { key: 'belt1', name: '1 Belt — Standard', price: '$39.99', tag: 'You save $24' },
+    { key: 'belt2', name: '2 Belts — Buy one for a friend', price: '$64.99', tag: 'Free Shipping' }
   ]
 };
 
@@ -499,9 +499,9 @@ function showRemovePopup() {
 
 function switchBundle(bundleKey) {
   const BUNDLE_DATA = {
-    belt1: { bundle: 'belt1', beltName: 'Menstrela™ Heat Belt — 1 Pack', beltPrice: 54.99, beltImg: 'menstrela-heat-belt-cart.png', checkoutUrl: 'https://mbze2f-ir.myshopify.com/cart/43764050133057:1?channel=buy_button' },
-    belt2: { bundle: 'belt2', beltName: 'Menstrela™ Heat Belt — 2 Pack', beltPrice: 94.99, beltImg: 'menstrela-heat-belt-cart.png', checkoutUrl: 'https://mbze2f-ir.myshopify.com/cart/43764066582593:1?channel=buy_button' },
-    belt3: { bundle: 'belt3', beltName: 'Menstrela™ Heat Belt — 3 Pack', beltPrice: 134.99, beltImg: 'menstrela-heat-belt-cart.png', checkoutUrl: 'https://mbze2f-ir.myshopify.com/cart/43764066517057:1?channel=buy_button' }
+    belt1: { bundle: 'belt1', beltName: 'Menstrela™ Heat Belt — 1 Pack', beltPrice: 39.99, beltImg: 'menstrela-heat-belt-cart.png', checkoutUrl: 'https://mbze2f-ir.myshopify.com/cart/43764050133057:1?channel=buy_button' },
+    belt2: { bundle: 'belt2', beltName: 'Menstrela™ Heat Belt — 2 Pack', beltPrice: 64.99, beltImg: 'menstrela-heat-belt-cart.png', checkoutUrl: 'https://mbze2f-ir.myshopify.com/cart/43764066582593:1?channel=buy_button' },
+    belt3: { bundle: 'belt3', beltName: 'Menstrela™ Heat Belt — 3 Pack', beltPrice: 89.99, beltImg: 'menstrela-heat-belt-cart.png', checkoutUrl: 'https://mbze2f-ir.myshopify.com/cart/43764066517057:1?channel=buy_button' }
   };
   const color = localStorage.getItem('selectedColor') || 'white';
   const isPink = color === 'pink';
@@ -534,7 +534,7 @@ function switchBundleWithColor(bundleKey) {
     belt3: 'https://mbze2f-ir.myshopify.com/cart/43764066353217:1?channel=buy_button'
   };
   const NAMES = { belt1: '1 Pack', belt2: '2 Pack', belt3: '3 Pack' };
-  const PRICES = { belt1: 54.99, belt2: 94.99, belt3: 134.99 };
+  const PRICES = { belt1: 39.99, belt2: 64.99, belt3: 89.99 };
   cartData = {
     bundle: bundleKey,
     beltName: `Menstrela™ Heat Belt — ${NAMES[bundleKey]} (${isWhite ? 'White' : 'Pink'})`,
